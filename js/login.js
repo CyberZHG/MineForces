@@ -4,21 +4,6 @@ var FileCookieStore = require('tough-cookie-filestore');
 
 var COOKIE_JAR_FILE = 'cookies.json';
 
-function setCookieJar() {
-  var cookie_jar = request.jar(new FileCookieStore(COOKIE_JAR_FILE));
-  request = request.defaults({jar: cookie_jar});
-}
-
-fs.exists(COOKIE_JAR_FILE, function(exists) {
-  if (!exists) {
-    fs.writeFile(COOKIE_JAR_FILE, '{}', function() {
-      setCookieJar();
-    });
-  } else {
-    setCookieJar();
-  }
-});
-
 function disableLoginForm() {
   $('#input_username').prop('disabled', true);
   $('#input_password').prop('disabled', true);
@@ -48,6 +33,42 @@ function hideTexts() {
   $('#panel_danger').hide();
 };
 hideTexts();
+
+function checkEntered() {
+  showInfo('Checking login status...');
+  request('http://codeforces.com/', function(error, response, body) {
+    if (!error && response.statusCode == 200) {
+       var enter_regex = /<a href="\/enter">Enter<\/a>/;
+       var result = enter_regex.exec(body);
+       console.log(result);
+       if (result === null) {
+         window.location.href = 'main.html';
+       } else {
+         $('#form_login').show();
+         hideTexts();
+       }
+    } else {
+       $('#form_login').show();
+       hideTexts();
+    }
+  });
+}
+
+function setCookieJar() {
+  var cookie_jar = request.jar(new FileCookieStore(COOKIE_JAR_FILE));
+  request = request.defaults({jar: cookie_jar});
+  checkEntered();
+}
+
+fs.exists(COOKIE_JAR_FILE, function(exists) {
+  if (!exists) {
+    fs.writeFile(COOKIE_JAR_FILE, '{}', function() {
+      setCookieJar();
+    });
+  } else {
+    setCookieJar();
+  }
+});
 
 $('#button_login').click(function() {
   disableLoginForm();

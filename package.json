@@ -1,13 +1,18 @@
 {
   "name": "MineForces",
+  "description": "A helper application for practising on Codeforces",
+  "version": "0.0.1",
+  "author": "Zhao HG",
   "main": "index.html",
   "window": {
-    "toolbar": false,
+    "toolbar": true,
     "resizable": true,
     "fullscreen": false,
-    "width": 800,
-    "height": 600
+    "width": 1024,
+    "height": 768
   },
   "dependencies": {
+    "request": "2.60.0",
+    "tough-cookie-filestore": "0.0.1"
   }
 }

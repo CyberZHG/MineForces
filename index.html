@@ -1,12 +1,70 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MineForces</title>
     <link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="./css/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="./css/bootstrap-cover.css">
   </head>
   <body>
-    Hello, World!
+    <div class="site-wrapper">
+      <div class="site-wrapper-inner">
+        <div class="cover-container">
+        <div class="masthead clearfix">
+            <div class="inner">
+              <nav>
+                <ul class="nav masthead-nav">
+                  <li><a href="./privacy.html">Privacy</a></li>
+                  <li><a href="./about.html">About</a></li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+          <div class="inner cover">
+            <h1 class="cover-heading">MineForces</h1>
+            <p class="lead">
+              <div class="container-fluid">
+                <div class="row-fluid">
+                  <div class="col-md-3">
+                  </div>
+                  <div class="col-md-6">
+                    <div class="row-fluid" style="margin-bottom: 5px">
+                      <input id="input_username" type="text" class="form-control" placeholder="Codeforces Username">
+                    </div>
+                    <div class="row-fluid" style="margin-bottom: 5px">
+                      <input id="input_password" type="password" class="form-control" placeholder="Codeforces Password">
+                    </div>
+                    <div class="row-fluid">
+                      <button id="button_login" type="button" class="btn btn-success form-control" style="margin-bottom: 5px">Login</button>
+                    </div>
+                    <div class="row-fluid">
+                      <div id="panel_info" class="panel panel-info">
+                        <div id="text_info" class="panel-heading"></div>
+                      </div>
+                      <div id="panel_danger" class="panel panel-danger">
+                        <div id="text_danger" class="panel-heading"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                  </div>
+                </div>
+              </div>
+            </p>
+          </div>
+          <div class="mastfoot">
+            <div class="inner">
+              <p><a target="_blank" href="https://github.com/XGG-Studio/MineForces">MineForces</a> is a helper application for practising on <a target="_blank" href="http://codeforces.com/">Codeforces</a>.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <script src="./js/jquery.min.js"></script>
     <script src="./js/bootstrap.min.js"></script>
+    <script src="./login.js"></script>
   </body>
 </html>

@@ -4,12 +4,19 @@ var FileCookieStore = require('tough-cookie-filestore');
 
 var COOKIE_JAR_FILE = 'cookies.json';
 
-fs.exists(COOKIE_JAR_FILE, function(exists) {
-  if (!exists) {
-    fs.writeFile(COOKIE_JAR_FILE, '{}');
-  }
+function setCookieJar() {
   var cookie_jar = request.jar(new FileCookieStore(COOKIE_JAR_FILE));
   request = request.defaults({jar: cookie_jar});
+}
+
+fs.exists(COOKIE_JAR_FILE, function(exists) {
+  if (!exists) {
+    fs.writeFile(COOKIE_JAR_FILE, '{}', function() {
+      setCookieJar();
+    });
+  } else {
+    setCookieJar();
+  }
 });
 
 function disableLoginForm() {
@@ -80,6 +87,9 @@ $('#button_login').click(function() {
               console.log(body);
             } else {
               showInfo('Login successfully');
+              setTimeout(function() {
+                window.location.href = 'main.html';
+              }, 100);
             }
         });
       }

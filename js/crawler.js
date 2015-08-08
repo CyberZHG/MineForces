@@ -83,11 +83,14 @@ exports.Crawler.prototype.save = function() {
   fs.writeFile('problems.json', JSON.stringify(this.problems));
 }
 
-exports.Crawler.prototype.load = function() {
+exports.Crawler.prototype.load = function(callback) {
   var context = this;
   fs.readFile('problems.json', function(err, data) {
     if (!err) {
       context.problems = JSON.parse(data);
+      if (callback) {
+        callback(context.problems);
+      }
     }
   });
 }
@@ -104,22 +107,25 @@ exports.Crawler.prototype.parseTotalPageNum = function(body) {
   console.log('Problemset page number: ' + this.total_page_num);
 }
 
-exports.Crawler.prototype.pullProblemsAt = function(page_num, retry_num) {
+exports.Crawler.prototype.pullProblemsAt = function(page_num, retry_num, callback) {
   if ((this.total_page_num > 0 && page_num > this.total_page_num) || retry_num >= 3) {
     this.save();
+    if (callback) {
+      callback(this.problems);
+    }
     return;
   }
   console.log('Pulling problems at ' + page_num + ' the ' + (retry_num + 1) + ' time.');
   var context = this;
   request('http://codeforces.com/problemset/page/' + page_num, function(error, response, body) {
     if (error || response.statusCode != 200) {
-      context.pullProblemsAt(page_num, retry_num + 1);
+      context.pullProblemsAt(page_num, retry_num + 1, callback);
     } else {
       body = body.replace(/(\r\n|\n|\r)/gm, '');
       var problem_table_regex = /<table class="problems">(.*)<\/table>/;
       var rows_html_result = problem_table_regex.exec(body);
       if (rows_html_result === null) {
-        context.pullProblemsAt(page_num, retry_num + 1);
+        context.pullProblemsAt(page_num, retry_num + 1, callback);
       } else {
         var rows_html = rows_html_result[1];
         var table_row_regex = /<tr .*?<\/tr>/g;
@@ -130,12 +136,12 @@ exports.Crawler.prototype.pullProblemsAt = function(page_num, retry_num) {
         if (context.total_page_num == 0) {
           context.parseTotalPageNum(body);
         }
-        context.pullProblemsAt(page_num + 1, 0);
+        context.pullProblemsAt(page_num + 1, 0, callback);
       }
     }
   });
 }
 
-exports.Crawler.prototype.pullProblems = function() {
-  this.pullProblemsAt(1, 0);
+exports.Crawler.prototype.pullProblems = function(callback) {
+  this.pullProblemsAt(1, 0, callback);
 }

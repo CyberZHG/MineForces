@@ -66,8 +66,8 @@
           $('#tag_table').append(html);
         }
         var selected = [];
-        var diff = [5000, 4000, 3000, 2000, 1000, 500, 200, 100];
-        for (var k = 0; k < 20; ++k) {
+        var diff = [4300, 3500, 2000, 1000, 500, 200];
+        for (var k = 0; k < 10; ++k) {
           var select = [];
           var tags = [];
           for (var i = 0; i < diff.length; ++i) {
@@ -79,7 +79,7 @@
               if (select.indexOf(key) > -1) {
                 continue;
               }
-              if (problems[key].acceped) {
+              if (problems[key].accepted) {
                 continue;
               }
               if (key.length !== 4) {
@@ -113,9 +113,8 @@
           $('#message').append((k + 1) + ':<br/>');
           for (var j in select) {
             selected.push(select[j]);
-            $('#message').append(select[j] + ' ');
+            $('#message').append(select[j] + ' - ' + problems[select[j]].title + '<br/>');
           }
-          $('#message').append('<br/>');
           for (var j in select) {
             $('#message').append(problems[select[j]].solved + ' ');
           }
@@ -127,33 +126,6 @@
             $('#message').append(tags[j]);
           }
           $('#message').append('<br/>');
-          $('#message').append('<br/>');
-        }
-        $('#message').append('<hr/>');
-        var tags = {};
-        for (var key in problems) {
-          if (!problems[key].accepted && problems[key].solved >= 200 && key.length == 4) {
-            for (var i in problems[key].tags) {
-              var tag = problems[key].tags[i];
-              if (!(tag in tags)) {
-                tags[tag] = [];
-              }
-              tags[tag].push(key);
-            }
-          }
-        }
-        selected = [];
-        for (var k = 0; k < 7; ++k) {
-          for (var tag in tags) {
-            while (tags[tag].length > 0) {
-              if (selected.indexOf(tags[tag][0]) == -1) {
-                $('#message').append(tags[tag][0] + ' ');
-                tags[tag].shift();
-                break;
-              }
-              tags[tag].shift();
-            }
-          }
           $('#message').append('<br/>');
         }
       }

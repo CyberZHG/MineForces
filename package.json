@@ -1,5 +1,5 @@
 {
-  "name": "MineForces",
+  "name": "mine-forces",
   "description": "A helper application for practising on Codeforces",
   "version": "0.0.2",
   "author": "Zhao HG",
@@ -10,6 +10,7 @@
   "dependencies": {
     "chalk": "1.1.1",
     "prompt": "0.2.14",
+    "commander": "2.9.0",
     "async": "1.5.0",
     "request": "2.60.0",
     "tough-cookie-filestore": "0.0.1"

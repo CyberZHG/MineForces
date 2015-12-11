@@ -1,6 +1,8 @@
 var fs = require('fs');
 var request = require('request');
 var FileCookieStore = require('tough-cookie-filestore');
+var log = require('./log')
+
 var cookie_jar = request.jar(new FileCookieStore('cookies.json'));
 request = request.defaults({jar: cookie_jar});
 
@@ -104,7 +106,7 @@ exports.Crawler.prototype.parseTotalPageNum = function(body) {
       this.total_page_num = page_num;
     }
   }
-  console.log('Problemset page number: ' + this.total_page_num);
+  log.info('Problemset page number: ' + this.total_page_num);
 }
 
 exports.Crawler.prototype.pullProblemsAt = function(page_num, retry_num, callback) {
@@ -115,7 +117,11 @@ exports.Crawler.prototype.pullProblemsAt = function(page_num, retry_num, callbac
     }
     return;
   }
-  console.log('Pulling problems at ' + page_num + ' the ' + (retry_num + 1) + ' time.');
+  if (retry_num == 1) {
+    log.info('Pulling problems on page ' + page_num);
+  } else {
+    log.info('Pulling problems on page ' + page_num + ' the ' + (retry_num + 1) + ' time');
+  }
   var context = this;
   request('http://codeforces.com/problemset/page/' + page_num, function(error, response, body) {
     if (error || response.statusCode != 200) {

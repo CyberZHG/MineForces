@@ -44,7 +44,7 @@ exports.checkEntered = function(request, callback) {
 exports.tryLogin = function(request, username, password, callback) {
   request('http://codeforces.com/enter', function(error, response, body) {
     if (error || response.statusCode != 200) {
-      log.fail("Failed to connect.");
+      log.fail("Failed to connect. " + error);
       callback(false);
     } else {
       var csrf_regex = /name='csrf_token' value='([0-9a-zA-Z]+)'/;

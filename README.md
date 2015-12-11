@@ -67,26 +67,14 @@ This operation will return a few sets of problems depends on the `options`. You 
 `options` is a JSON string:
 
 * `{"accepted": false}`: The default value is `false` and only the unsolved problems will be returned. However, when the value is set to `true`, both accepted and unaccepted problems will be returned.
-* `{"set_num": 10}`: The number of returned sets. The default value is `10`.
-* `{"problem_num": 5}`: The number of problems in one set. The default value is `5`.
-* `{"solved": [5000, 2000, 1000, 500, 100]}`: The length of the value array is the same as `problem_num`, which means the first problem should be solved by less or equal to 5,000 users, and the last problem should be solved by less or equal to 100 users.
-* ```
-  {"tags": {
-     "accept": ["dp", "math"], 
-     "reject": ["implementation"],
-     "reject-if-single": ["brute force"]
-   }
-  }
-  ``` The default value is `{"tags": {"accept": [], "reject": [], "reject-if-single": []}}`. This value contains three options:
-  * `accept`: An empty array `[]` means all tags all acceptable. However, if this value is non-empty, only the problems contain the tags in the accepted array will be returned. For example, a problem with tags `["bitmask", "greedy]"` will not returned since no tag has not appeared in `["dp", "math"]`.
-  * `reject`: The problem will not be returned if one of its tag has appeared in the reject array. For example, a problem with tags `["implementation","math"]` will be rejected. Not that `reject` has higher property than `accept`.
-  * `reject-if-single`: The problem will not be returned if it has only one tag and this tag appears in the reject-if-single array. This is useful for filtering `"implementation"` and `"brute force"`.
+* `{"set_num": 10}`: The default value is `10`. The number of returned sets. 
+* `{"problem_num": 5}`: The default value is `5`. The number of problems in one set. 
+* `{"solved": [5000, 2000, 1000, 500, 100]}`: The default value is `[5000, 2000, 1000, 500, 100]`. An empty array means there is no limitaton, otherwise the length of the value array should be the same as `problem_num`, which means the first problem should be solved by less or equal to 5,000 users, and the last problem should be solved by less or equal to 100 users.
+* `{"accept_tag": ["dp", "math"]}`: The default value is `[]`. An empty array `[]` means all tags all acceptable. However, if this value is non-empty, only the problems contain the tags in the accepted array will be returned.
+* `{"reject_tag": ["implementation"]}`: The default value is `[]`. The problem will not be returned if one of its tag has appeared in the reject array. Not that `reject` has higher property than `accept`.
+* `{"reject_single_tag": ["brute force"]}`: The default value is `[]`. The problem will not be returned if it has only one tag and this tag appears in the reject-if-single array. This is useful for filtering `"implementation"` and `"brute force"`.
+* `{"reject_no_tag": false}`: The default value is `false`. When set to `true`, the problem with no tag will not returned.
 
-Here is an real example:
-```
-mineforces -f '{"problem_num": 5, "solved": [800, 400, 200, 100, 50], "tags": {"accept": [], "reject": ["math"], "reject-if-single": ["implementation", "brute force"]}}'
-```
-This means you don't want to solve math problems and easy problems.
   
 ## License
 

@@ -6,18 +6,18 @@ var log = require('./log')
 var cookie_jar = request.jar(new FileCookieStore('cookies.json'));
 request = request.defaults({jar: cookie_jar});
 
-exports.Crawler = function() {
+Crawler = function() {
   this.problems = {};
   this.total_page_num = 0;
 }
 
-exports.Crawler.prototype.parseAccepted = function(row, problem) {
+Crawler.prototype.parseAccepted = function(row, problem) {
   var accepted_regex = /accepted-problem/;
   var result = accepted_regex.exec(row);
   problem.accepted = result !== null;
 }
 
-exports.Crawler.prototype.parseId = function(row, problem) {
+Crawler.prototype.parseId = function(row, problem) {
   var problem_id_regex = /<td class="id">.*?>.*?([0-9A-Z]+).*?<\/a>/;
   var result = problem_id_regex.exec(row);
   if (result === null) {
@@ -27,7 +27,7 @@ exports.Crawler.prototype.parseId = function(row, problem) {
   return true;
 }
 
-exports.Crawler.prototype.parseTitle = function(row, problem) {
+Crawler.prototype.parseTitle = function(row, problem) {
   var title_regex = /<div style="float:left;">.*?<a.*?>(.*?)<\/a>/;
   var result = title_regex.exec(row);
   if (result === null) {
@@ -37,7 +37,7 @@ exports.Crawler.prototype.parseTitle = function(row, problem) {
   return true;
 }
 
-exports.Crawler.prototype.parseTags = function(row, problem) {
+Crawler.prototype.parseTags = function(row, problem) {
   var tag_regex = /<a.*?class="notice".*?>(.*?)<\/a>/g;
   var result;
   while (result = tag_regex.exec(row)) {
@@ -45,7 +45,7 @@ exports.Crawler.prototype.parseTags = function(row, problem) {
   }
 }
 
-exports.Crawler.prototype.parseSolved = function(row, problem) {
+Crawler.prototype.parseSolved = function(row, problem) {
   var solved_regex = /user.png"\/>&nbsp;x(\d+)/;
   var result = solved_regex.exec(row);
   if (result === null) {
@@ -55,7 +55,7 @@ exports.Crawler.prototype.parseSolved = function(row, problem) {
   return true;
 }
 
-exports.Crawler.prototype.parseProblem = function(row) {
+Crawler.prototype.parseProblem = function(row) {
   var problem = {
     accepted: false,
     id: '',
@@ -77,18 +77,21 @@ exports.Crawler.prototype.parseProblem = function(row) {
   this.setProblem(problem);
 }
 
-exports.Crawler.prototype.setProblem = function(problem) {
+Crawler.prototype.setProblem = function(problem) {
   this.problems[problem.id] = problem;
 }
 
-exports.Crawler.prototype.save = function() {
+Crawler.prototype.save = function() {
   fs.writeFile('problems.json', JSON.stringify(this.problems));
 }
 
-exports.Crawler.prototype.load = function(callback) {
+Crawler.prototype.load = function(callback) {
   var context = this;
   fs.readFile('problems.json', function(err, data) {
-    if (!err) {
+    if (err) {
+      log.fail(err);
+      callback([]);
+    } else {
       context.problems = JSON.parse(data);
       if (callback) {
         callback(context.problems);
@@ -97,7 +100,7 @@ exports.Crawler.prototype.load = function(callback) {
   });
 }
 
-exports.Crawler.prototype.parseTotalPageNum = function(body) {
+Crawler.prototype.parseTotalPageNum = function(body) {
   var page_num_regex = /problemset\/page\/(\d+)/g;
   var result;
   while (result = page_num_regex.exec(body)) {
@@ -109,7 +112,7 @@ exports.Crawler.prototype.parseTotalPageNum = function(body) {
   log.info('Problemset page number: ' + this.total_page_num);
 }
 
-exports.Crawler.prototype.pullProblemsAt = function(page_num, retry_num, callback) {
+Crawler.prototype.pullProblemsAt = function(page_num, retry_num, callback) {
   if ((this.total_page_num > 0 && page_num > this.total_page_num) || retry_num >= 3) {
     this.save();
     if (callback) {
@@ -148,6 +151,16 @@ exports.Crawler.prototype.pullProblemsAt = function(page_num, retry_num, callbac
   });
 }
 
-exports.Crawler.prototype.pullProblems = function(callback) {
+Crawler.prototype.pullProblems = function(callback) {
   this.pullProblemsAt(1, 0, callback);
+}
+
+exports.pullProblems = function(callback) {
+  var crawler = new Crawler();
+  crawler.pullProblems(callback);
+}
+
+exports.loadProblems = function(callback) {
+  var crawler = new Crawler();
+  crawler.load(callback);
 }

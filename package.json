@@ -1,9 +1,8 @@
 {
   "name": "mine-forces",
   "description": "A helper application for practising on Codeforces",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "Zhao HG",
-  "main": "./libs/main.js",
   "bin": {
     "mineforces": "./libs/main.js"
   },

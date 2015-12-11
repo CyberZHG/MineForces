@@ -1,10 +1,12 @@
+#!/usr/bin/env node
 var async = require('async')
 var program = require('commander');
 
 program
-  .version('0.0.2')
+  .version('0.0.3')
   .option('-l, --login', 'login to Codeforces')
   .option('-c, --crawl', 'crawl status from Codeforces')
+  .option('-f, --filter <options>', 'get filtered problem sets')
   .parse(process.argv)
 
 async.series([
@@ -48,7 +50,3 @@ async.series([
       }
     }
 ]);
-
-
-
-

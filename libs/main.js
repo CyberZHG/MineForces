@@ -3,11 +3,10 @@ var async = require('async')
 var program = require('commander');
 
 program
-  .version('0.0.3')
-  .option('-l, --login', 'login to Codeforces')
-  .option('-c, --crawl', 'crawl status from Codeforces')
-  .option('-f, --filter <options>', 'get filtered problem sets')
-  .parse(process.argv)
+  .version('0.0.5')
+  .option('-u, --user <user_id>', 'the id of your Codeforces account')
+  .option('-s, --setting <path>', 'the path of the setting file')
+  .parse(process.argv);
 
 async.series([
   function(callback) {
@@ -51,7 +50,7 @@ async.series([
   function(callback) {
     if (program.filter) {
       var filter = require('./filter');
-      filter.outputFilteredProblemSets(function(problem_sets) {
+      filter.outputFilteredProblemSets(JSON.parse(program.filter), function(problem_sets) {
         callback(null);
       });
     } else {

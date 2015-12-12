@@ -12,14 +12,16 @@ const KEYS = [KEY_ACCEPTED, KEY_SET_NUM, KEY_PROBLEM_NUM, KEY_SOLVED,
               KEY_ACCEPT_TAG, KEY_REJECT_TAG, KEY_REJECT_SINGLE_TAG, KEY_REJECT_NO_TAG];
 
 function getDefaultFilter() {
-  return {KEY_ACCEPTED: false,
-          KEY_SET_NUM: 10,
-          KEY_PROBLEM_NUM: 5,
-          KEY_SOLVED: [5000, 2000, 1000, 500, 100],
-          KEY_ACCEPT_TAG: [],
-          KEY_REJECT_TAG: [],
-          KEY_REJECT_SINGLE_TAG: [],
-          KEY_REJECT_NO_TAG: false};
+  var filter = {};
+  filter[KEY_ACCEPTED] = false;
+  filter[KEY_SET_NUM] = 10;
+  filter[KEY_PROBLEM_NUM] = 5;
+  filter[KEY_SOLVED] = [5000, 2000, 1000, 500, 100];
+  filter[KEY_ACCEPT_TAG] = [];
+  filter[KEY_REJECT_TAG] = [];
+  filter[KEY_REJECT_SINGLE_TAG] = [];
+  filter[KEY_REJECT_NO_TAG] = false;
+  return filter;
 }
 
 function getUserFilter(user_setting) {
@@ -111,16 +113,17 @@ exports.getFilteredProblemSets = function(user_setting, callback) {
       }
       problem_sets.push(problem_set);
     }
+    callback(problem_sets);
   });
 };
 
 exports.outputFilteredProblemSets = function(user_setting, callback) {
-  getFilteredProblemSets(user_setting, function(problem_sets) {
+  exports.getFilteredProblemSets(user_setting, function(problem_sets) {
     for (var i = 0; i < problem_sets.length; ++i) {
       console.log(chalk.yellow("Problem Suite " + i));
       for (var j = 0; j < problem_sets[i].length; ++j) {
         var problem = problem_sets[i][j];
-        console.log(chalk.inverse(problem.key) + ' ' + problem.title);
+        console.log(chalk.green(problem.id) + ' ' + problem.title);
         console.log(chalk.gray(problem.solved + ' | ' + problem.tags.join(', ')));
       }
       console.log();

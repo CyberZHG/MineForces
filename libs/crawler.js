@@ -120,7 +120,7 @@ Crawler.prototype.pullProblemsAt = function(page_num, retry_num, callback) {
     }
     return;
   }
-  if (retry_num == 1) {
+  if (retry_num == 0) {
     log.info('Pulling problems on page ' + page_num);
   } else {
     log.info('Pulling problems on page ' + page_num + ' the ' + (retry_num + 1) + ' time');

@@ -2,7 +2,7 @@
 var program = require('commander');
 
 program
-  .version('0.0.5')
+  .version('0.0.8')
   .option('-s, --setting <path>', 'the path of the setting file')
   .parse(process.argv);
 
@@ -40,10 +40,6 @@ function getUserSetting(callback) {
 }
 
 getUserSetting(function(user_setting) {
-  var problem_crawler = require('./problem_crawler');
-  problem_crawler.getProblems(setting.isForceUpdate(user_setting), function(problems) {
-    var submission_crawler = require('./submission_crawler');
-    submission_crawler.getUserInfo('tourist');
-  });
+  var filter = require('./filter');
+  filter.outputFilteredProblemSets(user_setting);
 });
-

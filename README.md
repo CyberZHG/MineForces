@@ -1,21 +1,23 @@
 Mine Forces
 ===========
 
-![travis-ci](https://travis-ci.org/CyberZHG/MineForces.svg)
-![david-dm](https://david-dm.org/CyberZHG/MineForces.svg)
-![badge.fury](https://badge.fury.io/js/mine-forces.svg)
+[![travis-ci](https://travis-ci.org/CyberZHG/MineForces.svg)](https://travis-ci.org/CyberZHG/MineForces)
+[![david-dm](https://david-dm.org/CyberZHG/MineForces.svg)](https://david-dm.org/CyberZHG/MineForces)
+[![badge.fury](https://badge.fury.io/js/mine-forces.svg)](https://badge.fury.io/js/mine-forces)
 [![Codacy Badge](https://api.codacy.com/project/badge/grade/4b7652276bb9490fab1c389947179095)](https://www.codacy.com/app/CyberZHG/MineForces)
 
 ## Introduction
 
 MineForces is used to filter problems on [Codeforces](http://codeforces.com/).
 
+![EG](https://cloud.githubusercontent.com/assets/853842/11766478/9c47fc7c-a1c4-11e5-9dfb-dc671bc71a08.png)
+
 ## Installation
 
 You need [Node.js](https://nodejs.org/) installed and type the following in command line:
 
 ```
-npm install -g mine-forces
+sudo npm install -g mine-forces
 ```
 
 ## Usage
@@ -27,7 +29,6 @@ Options:
 
 -h, --help            output usage information
 -V, --version         output the version number
--u, --user <user_id>  the id of your Codeforces account
 -s, --setting <path>  the path of the setting file
 ```
 
@@ -42,6 +43,7 @@ Setting is stored in a [JSON](http://www.json.org/) file. If you do not provide 
   "chase": [],
   "set_num": 10,
   "problem_num": 5,
+  "force_update": false,
   "solved": [5000, 2000, 1000, 500, 100],
   "tag_accept": [],
   "tag_reject": [],
@@ -59,11 +61,8 @@ The default value is `false`. When `accepted` is set to `false`, only the unsolv
 Team contains an array of Codeforces IDs, when your team are practicing together, MineForces is useful to find problems that none of your team members has solved.
 
 #### Example 1 
-If you want to find the unsolved problems of `vjudge1`, you can use:
-```
-mineforces -u vjudge1
-```
-or you can write a json file named `team_1.json`:
+
+If you want to find the unsolved problems of `vjudge1`, you can write a json file named `team_1.json`:
 ```javascript
 {
   "team": ["vjudge1"]
@@ -74,7 +73,10 @@ and type:
 mineforces -s ./team_1.json
 ```
 
+However, you should __NEVER__ use `vjudge[1-5]` in `team` or `chase` because each of these accounts has thousands of submissions.
+
 #### Example 2
+
 If you have a team contains `vjudge1`, `vjudge2` and `vjudge3`, you can write a json file named `team_2.json`:
 ```javascript
 {
@@ -95,12 +97,13 @@ This value has the same format as `team`, when `chase` is not an empty array, on
 Imagine one day you suddenly want to solve all the problems that `tourist` has solved on Codeforces, you can create a json file `chase.json`:
 ```javascript
 {
+  "team": ["your_cf_id"],
   "chase": ["tourist"]
 }
 ```
 and type:
 ```
-mineforces -u your_cf_id -s chase.json
+mineforces -s chase.json
 ```
 
 ### Set Number
@@ -111,6 +114,10 @@ The number of problem sets that will be returned.
 
 The number of problems in one problem set.
 
+### Force Update
+
+The problem stats will not update if it has updated the stats within a week.
+
 ### Solved
 
 If `solved` is an empty array, then there is no limitation about how many users have solved the problem. If `solved` is non-empty, it should have the same length as `problem_num`. The problem which has a larger solved number will not be returned. For example, the second problem in a problem set which has been solved by 301 users will not be returned if the `solved` value is `[400, 300, 200, 100, 50]`.
@@ -118,14 +125,19 @@ If `solved` is an empty array, then there is no limitation about how many users 
 #### Example
 
 This property is useful to control the difficulty, if you want a set of problems that has the approximately difficuly as `Div 2`, you can use:
+
 ```javascript
 {
+  "team": ["your_cf_id"],
   "solved": [5000, 4000, 3000, 1000, 700]
 }
 ```
+
 And if you want a `Div 1`:
+
 ```javascript
 {
+  "team": ["your_cf_id"],
   "solved": [3000, 1000, 700, 400, 100]
 }
 ```
@@ -139,6 +151,7 @@ If the value is empty, then all the cateogries will be returned. If the value is
 If you want to solve dynamic programming problems only, you can use:
 ```javascript
 {
+  "team": ["your_cf_id"],
   "tag_accept": ["dp"]
 }
 ```

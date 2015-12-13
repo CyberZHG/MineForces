@@ -81,6 +81,6 @@ exports.getTagRejectIfSingle = function(setting) {
   return setting[KEY_TAG_REJECT_IF_SINGLE];
 }
 
-exports.getTagRejectIfNone = function(setting) {
+exports.isTagRejectIfNone = function(setting) {
   return setting[KEY_TAG_REJECT_IF_NONE];
 }

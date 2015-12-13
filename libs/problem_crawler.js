@@ -5,12 +5,12 @@ var util = require('./util');
 
 const PROBLEM_FILE = util.getSaveDirectory() + 'problems.json';
 
-Crawler = function() {
+ProblemCrawler = function() {
   this.problems = {};
   this.total_page_num = 0;
 }
 
-Crawler.prototype.parseId = function(row, problem) {
+ProblemCrawler.prototype.parseId = function(row, problem) {
   var problem_id_regex = /<td class="id">.*?>.*?([0-9A-Z]+).*?<\/a>/;
   var result = problem_id_regex.exec(row);
   if (result === null) {
@@ -20,7 +20,7 @@ Crawler.prototype.parseId = function(row, problem) {
   return true;
 }
 
-Crawler.prototype.parseTitle = function(row, problem) {
+ProblemCrawler.prototype.parseTitle = function(row, problem) {
   var title_regex = /<div style="float:left;">.*?<a.*?>(.*?)<\/a>/;
   var result = title_regex.exec(row);
   if (result === null) {
@@ -30,7 +30,7 @@ Crawler.prototype.parseTitle = function(row, problem) {
   return true;
 }
 
-Crawler.prototype.parseTags = function(row, problem) {
+ProblemCrawler.prototype.parseTags = function(row, problem) {
   var tag_regex = /<a.*?class="notice".*?>(.*?)<\/a>/g;
   var result;
   while (result = tag_regex.exec(row)) {
@@ -38,7 +38,7 @@ Crawler.prototype.parseTags = function(row, problem) {
   }
 }
 
-Crawler.prototype.parseSolved = function(row, problem) {
+ProblemCrawler.prototype.parseSolved = function(row, problem) {
   var solved_regex = /user.png"\/>&nbsp;x(\d+)/;
   var result = solved_regex.exec(row);
   if (result === null) {
@@ -48,7 +48,7 @@ Crawler.prototype.parseSolved = function(row, problem) {
   return true;
 }
 
-Crawler.prototype.parseProblem = function(row) {
+ProblemCrawler.prototype.parseProblem = function(row) {
   var problem = {
     id: '',
     title: '',
@@ -68,11 +68,11 @@ Crawler.prototype.parseProblem = function(row) {
   this.problems[problem.id] = problem;
 }
 
-Crawler.prototype.save = function() {
+ProblemCrawler.prototype.save = function() {
   fs.writeFile(PROBLEM_FILE, JSON.stringify(this.problems));
 }
 
-Crawler.prototype.load = function(callback) {
+ProblemCrawler.prototype.load = function(callback) {
   var context = this;
   fs.readFile(PROBLEM_FILE, function(err, data) {
     if (err) {
@@ -88,7 +88,7 @@ Crawler.prototype.load = function(callback) {
   });
 }
 
-Crawler.prototype.parseTotalPageNum = function(body) {
+ProblemCrawler.prototype.parseTotalPageNum = function(body) {
   var page_num_regex = /problemset\/page\/(\d+)/g;
   var result;
   while (result = page_num_regex.exec(body)) {
@@ -100,7 +100,7 @@ Crawler.prototype.parseTotalPageNum = function(body) {
   log.info('Problemset page count: ' + this.total_page_num);
 }
 
-Crawler.prototype.pullProblemsAt = function(page_num, retry_num, callback) {
+ProblemCrawler.prototype.pullProblemsAt = function(page_num, retry_num, callback) {
   if ((this.total_page_num > 0 && page_num > this.total_page_num) || retry_num >= 3) {
     this.save();
     if (callback) {
@@ -139,12 +139,12 @@ Crawler.prototype.pullProblemsAt = function(page_num, retry_num, callback) {
   });
 }
 
-Crawler.prototype.pullProblems = function(callback) {
+ProblemCrawler.prototype.pullProblems = function(callback) {
   this.pullProblemsAt(1, 0, callback);
 }
 
 exports.getProblems = function(force_update, callback) {
-  var crawler = new Crawler();
+  var crawler = new ProblemCrawler();
   if (force_update) {
     crawler.pullProblems(callback);
   } else {

@@ -3,7 +3,7 @@ var request = require('request');
 var log = require('./log')
 var util = require('./util');
 
-Crawler = function(user_id) {
+SubmissionCrawler = function(user_id) {
   this.total_page_num = 0;
   this.max_sub_num = -1;
   this.user_info = {
@@ -14,15 +14,15 @@ Crawler = function(user_id) {
   this.finished = false;
 }
 
-Crawler.prototype.getSubmissionsPageAt = function(page_num) {
+SubmissionCrawler.prototype.getSubmissionsPageAt = function(page_num) {
   return 'http://codeforces.com/submissions/' + this.user_info.user_id + '/page/' + page_num;
 }
 
-Crawler.prototype.getSaveFilePath = function() {
+SubmissionCrawler.prototype.getSaveFilePath = function() {
   return util.getSaveDirectory() + 'user_' + this.user_info.user_id + '.json';
 }
 
-Crawler.prototype.parseSubmission = function(row) {
+SubmissionCrawler.prototype.parseSubmission = function(row) {
   var submission_id_regex = /data-submission-id="([0-9]+)"/;
   var result = submission_id_regex.exec(row);
   if (result) {
@@ -32,6 +32,7 @@ Crawler.prototype.parseSubmission = function(row) {
     }
     if (submission_id <= this.user_info.max_sub_num) {
       this.finished = true;
+      log.info("Found saved submission: " + submission_id);
       return;
     }
   }
@@ -46,12 +47,12 @@ Crawler.prototype.parseSubmission = function(row) {
   }
 }
 
-Crawler.prototype.save = function() {
+SubmissionCrawler.prototype.save = function() {
   this.user_info.max_sub_num = this.max_sub_num;
   fs.writeFile(this.getSaveFilePath(), JSON.stringify(this.user_info));
 }
 
-Crawler.prototype.load = function(callback) {
+SubmissionCrawler.prototype.load = function(callback) {
   var context = this;
   fs.readFile(this.getSaveFilePath(), function(err, data) {
     if (err) {
@@ -59,7 +60,11 @@ Crawler.prototype.load = function(callback) {
         callback();
       }
     } else {
-      context.user_info = JSON.parse(data);
+      try {
+        context.user_info = JSON.parse(data);
+      } catch (e) {
+        log.fail(e);
+      }
       context.max_sub_num = context.user_info.max_sub_num;
       if (callback) {
         callback();
@@ -68,7 +73,7 @@ Crawler.prototype.load = function(callback) {
   });
 }
 
-Crawler.prototype.parseTotalPageNum = function(body) {
+SubmissionCrawler.prototype.parseTotalPageNum = function(body) {
   var page_num_regex = /<span class="page-index.*?" pageIndex="(\d+)">/g;
   var result;
   while (result = page_num_regex.exec(body)) {
@@ -80,9 +85,9 @@ Crawler.prototype.parseTotalPageNum = function(body) {
   log.info('Submissions page count: ' + this.total_page_num);
 }
 
-Crawler.prototype.pullSubmissionsAt = function(page_num, retry_num, callback) {
+SubmissionCrawler.prototype.pullSubmissionsAt = function(page_num, retry_num, callback) {
   if (this.finished || (this.total_page_num > 0 && page_num > this.total_page_num) || retry_num >= 3) {
-    if (retry_num < 3) {
+    if (retry_num < 3 && this.max_sub_num > this.user_info.max_sub_num) {
       this.save();
     }
     if (callback) {
@@ -124,12 +129,12 @@ Crawler.prototype.pullSubmissionsAt = function(page_num, retry_num, callback) {
   });
 }
 
-Crawler.prototype.pullSubmissions = function(callback) {
+SubmissionCrawler.prototype.pullSubmissions = function(callback) {
   this.pullSubmissionsAt(1, 0, callback);
 }
 
 exports.getUserInfo = function(user_id, callback) {
-  var crawler = new Crawler(user_id);
+  var crawler = new SubmissionCrawler(user_id);
   crawler.load(function() {
     crawler.pullSubmissions(callback);
   });

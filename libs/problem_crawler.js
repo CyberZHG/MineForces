@@ -65,10 +65,6 @@ Crawler.prototype.parseProblem = function(row) {
   if (!this.parseSolved(row, problem)) {
     return;
   }
-  this.setProblem(problem);
-}
-
-Crawler.prototype.setProblem = function(problem) {
   this.problems[problem.id] = problem;
 }
 
@@ -80,8 +76,9 @@ Crawler.prototype.load = function(callback) {
   var context = this;
   fs.readFile(PROBLEM_FILE, function(err, data) {
     if (err) {
-      log.fail(err);
-      callback([]);
+      if (callback) {
+        callback([]);
+      }
     } else {
       context.problems = JSON.parse(data);
       if (callback) {
@@ -100,7 +97,7 @@ Crawler.prototype.parseTotalPageNum = function(body) {
       this.total_page_num = page_num;
     }
   }
-  log.info('Problemset page number: ' + this.total_page_num);
+  log.info('Problemset page count: ' + this.total_page_num);
 }
 
 Crawler.prototype.pullProblemsAt = function(page_num, retry_num, callback) {

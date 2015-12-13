@@ -1,20 +1,13 @@
 var fs = require('fs');
 var request = require('request');
-var FileCookieStore = require('tough-cookie-filestore');
 var log = require('./log')
+var util = require('./util');
 
-var cookie_jar = request.jar(new FileCookieStore('cookies.json'));
-request = request.defaults({jar: cookie_jar});
+const PROBLEM_FILE = util.getSaveDirectory() + 'problems.json';
 
 Crawler = function() {
   this.problems = {};
   this.total_page_num = 0;
-}
-
-Crawler.prototype.parseAccepted = function(row, problem) {
-  var accepted_regex = /accepted-problem/;
-  var result = accepted_regex.exec(row);
-  problem.accepted = result !== null;
 }
 
 Crawler.prototype.parseId = function(row, problem) {
@@ -57,13 +50,11 @@ Crawler.prototype.parseSolved = function(row, problem) {
 
 Crawler.prototype.parseProblem = function(row) {
   var problem = {
-    accepted: false,
     id: '',
     title: '',
     tags: [],
     solved: -1
   };
-  this.parseAccepted(row, problem);
   if (!this.parseId(row, problem)) {
     return;
   }
@@ -82,12 +73,12 @@ Crawler.prototype.setProblem = function(problem) {
 }
 
 Crawler.prototype.save = function() {
-  fs.writeFile('problems.json', JSON.stringify(this.problems));
+  fs.writeFile(PROBLEM_FILE, JSON.stringify(this.problems));
 }
 
 Crawler.prototype.load = function(callback) {
   var context = this;
-  fs.readFile('problems.json', function(err, data) {
+  fs.readFile(PROBLEM_FILE, function(err, data) {
     if (err) {
       log.fail(err);
       callback([]);
@@ -155,12 +146,25 @@ Crawler.prototype.pullProblems = function(callback) {
   this.pullProblemsAt(1, 0, callback);
 }
 
-exports.pullProblems = function(callback) {
+exports.getProblems = function(force_update, callback) {
   var crawler = new Crawler();
-  crawler.pullProblems(callback);
-}
-
-exports.loadProblems = function(callback) {
-  var crawler = new Crawler();
-  crawler.load(callback);
+  if (force_update) {
+    crawler.pullProblems(callback);
+  } else {
+    fs.stat(PROBLEM_FILE, function(err, stats) {
+      if (err) {
+        crawler.pullProblems(callback);
+      } else {
+        var lastModifiedTime = new Date(stats.mtime);
+        var currentTime = Date.now();
+        var diff = currentTime - lastModifiedTime;
+        // The problem info is one week age.
+        if (diff > 1000 * 60 * 60 * 24 * 7) {
+          crawler.pullProblems(callback);
+        } else {
+          crawler.load(callback);
+        }
+      }
+    });
+  }
 }

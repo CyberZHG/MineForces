@@ -1,38 +1,10 @@
 const chalk = require('chalk');
+var setting = require('./setting');
 
-const KEY_ACCEPTED = "accepted";
-const KEY_SET_NUM = "set_num";
-const KEY_PROBLEM_NUM = "problem_num";
-const KEY_SOLVED = "solved";
-const KEY_ACCEPT_TAG = "accept_tag";
-const KEY_REJECT_TAG = "reject_tag";
-const KEY_REJECT_SINGLE_TAG = "reject_single_tag";
-const KEY_REJECT_NO_TAG = "reject_no_tag";
-const KEYS = [KEY_ACCEPTED, KEY_SET_NUM, KEY_PROBLEM_NUM, KEY_SOLVED,
-              KEY_ACCEPT_TAG, KEY_REJECT_TAG, KEY_REJECT_SINGLE_TAG, KEY_REJECT_NO_TAG];
-
-function getDefaultFilter() {
-  var filter = {};
-  filter[KEY_ACCEPTED] = false;
-  filter[KEY_SET_NUM] = 10;
-  filter[KEY_PROBLEM_NUM] = 5;
-  filter[KEY_SOLVED] = [5000, 2000, 1000, 500, 100];
-  filter[KEY_ACCEPT_TAG] = [];
-  filter[KEY_REJECT_TAG] = [];
-  filter[KEY_REJECT_SINGLE_TAG] = [];
-  filter[KEY_REJECT_NO_TAG] = false;
-  return filter;
-}
-
-function getUserFilter(user_setting) {
-  var filter = getDefaultFilter();
-  for (var i = 0; i < KEYS.length; ++i) {
-    var key = KEYS[i];
-    if (key in user_setting) {
-      filter[key] = user_setting[key];
-    }
+function filterTeam(user_setting, users, problem) {
+  if (setting.isAllowAccepted(user_setting)) {
+    return false;
   }
-  return filter;
 }
 
 exports.getFilteredProblemSets = function(user_setting, callback) {

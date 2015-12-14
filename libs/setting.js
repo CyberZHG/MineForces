@@ -9,6 +9,9 @@ const KEY_TAG_ACCEPT           = "tag_accept";
 const KEY_TAG_REJECT           = "tag_reject";
 const KEY_TAG_REJECT_IF_SINGLE = "tag_reject_if_single";
 const KEY_TAG_REJECT_IF_NONE   = "tag_reject_if_none";
+const KEY_ID_RANGE             = "id_range";
+const KEY_ID_ACCEPT            = "id_accept";
+const KEY_REJECT_SUB           = "reject_sub";
 
 const KEYS = [KEY_ACCEPTED, KEY_TEAM, KEY_CHASE, 
               KEY_SET_NUM, KEY_PROBLEM_NUM, KEY_FORCE_UPDATE, KEY_SOLVED,
@@ -27,6 +30,9 @@ exports.getDefaultSetting = function() {
   setting[KEY_TAG_REJECT]           = [];
   setting[KEY_TAG_REJECT_IF_SINGLE] = [];
   setting[KEY_TAG_REJECT_IF_NONE]   = false;
+  setting[KEY_ID_RANGE]             = [0, 100000];
+  setting[KEY_ID_ACCEPT]            = [];
+  setting[KEY_REJECT_SUB]           = false;
   return setting;
 }
 
@@ -39,6 +45,18 @@ exports.getUserSetting = function(user_setting) {
     }
   }
   return setting;
+}
+
+exports.addUser = function(user_setting, username) {
+  if (user_setting[KEY_TEAM].indexOf(username) !== -1) {
+    user_setting[KEY_TEAM].push(username);
+  }
+  return user_setting;
+}
+
+exports.setForceUpdate = function(user_setting) {
+  user_setting[KEY_FORCE_UPDATE] = true;
+  return user_setting;
 }
 
 exports.isAllowAccepted = function(setting) {
@@ -83,4 +101,20 @@ exports.getTagRejectIfSingle = function(setting) {
 
 exports.isTagRejectIfNone = function(setting) {
   return setting[KEY_TAG_REJECT_IF_NONE];
+}
+
+exports.getIdRangeLow = function(setting) {
+  return setting[KEY_ID_RANGE][0];
+}
+
+exports.getIdRangeHigh = function(setting) {
+  return setting[KEY_ID_RANGE][1];
+}
+
+exports.getIdAccept = function(setting) {
+  return setting[KEY_ID_ACCEPT];
+}
+
+exports.isRejectSub = function(setting) {
+  return setting[KEY_REJECT_SUB];
 }

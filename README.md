@@ -27,14 +27,16 @@ Usage: mineforces [options]
 
 Options:
 
--h, --help            output usage information
--V, --version         output the version number
--s, --setting <path>  the path of the setting file
+  -h, --help              output usage information
+  -V, --version           output the version number
+  -s, --setting <path>    the path of the setting file
+  -u, --user <user_name>  add your id to team value
+  -f, --force             force updating the problem
 ```
 
 ### Default Setting
 
-Setting is stored in a [JSON](http://www.json.org/) file. If you do not provide the path of the file, the problem will use the default setting:
+Setting is stored in a [JSON](http://www.json.org/) file. If you do not provide the path of the file, the program will use the default setting:
 
 ```javascript
 {
@@ -48,7 +50,10 @@ Setting is stored in a [JSON](http://www.json.org/) file. If you do not provide 
   "tag_accept": [],
   "tag_reject": [],
   "tag_reject_if_single": [],
-  "tag_reject_if_none": false
+  "tag_reject_if_none": false,
+  "id_range": [0, 100000],
+  "id_accept": [],
+  "reject_sub": false
 }
 ```
 
@@ -73,7 +78,7 @@ and type:
 mineforces -s ./team_1.json
 ```
 
-However, you should __NEVER__ use `vjudge[1-5]` in `team` or `chase` because each of these accounts has thousands of submissions.
+However, you should __NEVER__ use `vjudge[1-5]` in `team` or `chase` because each of these accounts has thousands of pages of submissions.
 
 #### Example 2
 
@@ -167,6 +172,32 @@ The problem which has only one tag and the tag appeared in the `tag_reject_if_si
 ### Tag Reject If None
 
 The problem which has no tag yet will not be returned.
+
+### ID Range
+
+If you do not want to solve old problems, you can set:
+
+```javascript
+{
+  "id_range": [100, 100000]  
+}
+```
+
+then problems like `99A`, `99B`, `1C` will not returned.
+
+### ID Accept
+
+If the value is an empty array, then nothing happends. If you want to solve problems like `100E`, `101E`, `102E`, you can set:
+
+```javascript
+{
+  "id_accept": ["E"]
+}
+```
+
+### Reject Sub
+
+Some problems have multiple difficulties (`178C1`, `178C2` and `178C3`), these problems will not returned if `reject_sub` is set to `true`.
   
 ## License
 

@@ -11,12 +11,14 @@ ProblemCrawler = function() {
 }
 
 ProblemCrawler.prototype.parseId = function(row, problem) {
-  var problem_id_regex = /<td class="id">.*?>.*?([0-9A-Z]+).*?<\/a>/;
+  var problem_id_regex = /<td class="id">.*?>.*?([0-9]+)([0-9A-Z]+).*?<\/a>/;
   var result = problem_id_regex.exec(row);
   if (result === null) {
     return false;
   }
-  problem.id = result[1];
+  problem.id = result[1] + result[2];
+  problem.num = result[1];
+  problem.alpha = result[2];
   return true;
 }
 

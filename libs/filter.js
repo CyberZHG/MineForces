@@ -109,6 +109,29 @@ Filter.prototype.checkTagRejectIfNone = function(problem) {
   return true;
 }
 
+Filter.prototype.checkIdRange = function(problem) {
+  var low = setting.getIdRangeLow(this.user_setting);
+  var high = setting.getIdRangeHigh(this.user_setting);
+  return low <= problem.num && problem.num <= high;
+}
+
+Filter.prototype.checkIdAccept = function(problem) {
+  var accepts = setting.getIdAccept(this.user_setting);
+  if (accepts.length == 0) {
+    return true;
+  }
+  return accepts.indexOf(problem.alpha[0]) >= 0;
+}
+
+Filter.prototype.checkRejectSub = function(problem) {
+  if (setting.isRejectSub(this.user_setting)) {
+    if (problem.alpha.length > 1) {
+      return false;
+    }
+  }
+  return true;
+}
+
 Filter.prototype.isProblemValid = function(problem, index) {
   if (!this.checkAccepted(problem)) {
     return false;
@@ -126,6 +149,15 @@ Filter.prototype.isProblemValid = function(problem, index) {
     return false;
   }
   if (!this.checkTagRejectIfNone(problem)) {
+    return false;
+  }
+  if (!this.checkIdRange(problem)) {
+    return false;
+  }
+  if (!this.checkIdAccept(problem)) {
+    return false;
+  }
+  if (!this.checkRejectSub(problem)) {
     return false;
   }
   return true;

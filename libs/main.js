@@ -2,8 +2,10 @@
 var program = require('commander');
 
 program
-  .version('0.0.8')
+  .version('0.0.9')
   .option('-s, --setting <path>', 'the path of the setting file')
+  .option('-u, --user <user_name>', 'add your id to team value')
+  .option('-f, --force', 'force updating the problem')
   .parse(process.argv);
 
 var fs = require('fs');
@@ -40,6 +42,12 @@ function getUserSetting(callback) {
 }
 
 getUserSetting(function(user_setting) {
+  if (program.user) {
+    user_setting = setting.addUser(user_setting, program.user);
+  }
+  if (program.force) {
+    user_setting = setting.setForceUpdate(user_setting);
+  }
   var filter = require('./filter');
   filter.outputFilteredProblemSets(user_setting);
 });

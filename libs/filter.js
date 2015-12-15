@@ -1,18 +1,17 @@
 const chalk = require('chalk');
 var async = require('async');
-var setting = require('./setting');
 var submission_crawler = require('./submission_crawler');
 
-Filter = function(user_setting, callback) {
+Filter = function(setting, callback) {
   var crawler = require('./submission_crawler');
-  this.user_setting = user_setting;
+  this.setting = setting;
   this.team_accepts = {};
   this.chase_accepts = {};
   this.initTeam(0, callback);
 }
 
 Filter.prototype.initTeam = function(index, callback) {
-  var team = setting.getTeam(this.user_setting);
+  var team = this.setting.getTeam();
   if (index >= team.length) {
     this.initChase(0, callback);
   } else {
@@ -27,7 +26,7 @@ Filter.prototype.initTeam = function(index, callback) {
 }
 
 Filter.prototype.initChase = function(index, callback) {
-  var chase = setting.getChase(this.user_setting);
+  var chase = this.setting.getChase();
   if (index >= chase.length) {
     callback(this);
   } else {
@@ -42,12 +41,12 @@ Filter.prototype.initChase = function(index, callback) {
 }
 
 Filter.prototype.checkAccepted = function(problem) {
-  if (!setting.isAllowAccepted(this.user_setting)) {
+  if (!this.setting.isAllowAccepted()) {
     if (this.team_accepts[problem.id]) {
       return false;
     }
   }
-  if (setting.getChase(this.user_setting).length > 0) {
+  if (this.setting.getChase().length > 0) {
     if (!this.chase_accepts[problem.id]) {
       return false;
     }
@@ -56,7 +55,7 @@ Filter.prototype.checkAccepted = function(problem) {
 }
 
 Filter.prototype.checkSolved = function(problem, index) {
-  var solved = setting.getSolved(this.user_setting);
+  var solved = this.setting.getSolved();
   if (solved.length > 0) {
     if (problem.solved > solved[index]) {
       return false;
@@ -66,7 +65,7 @@ Filter.prototype.checkSolved = function(problem, index) {
 }
 
 Filter.prototype.checkTagAccept = function(problem) {
-  var tag_accept = setting.getTagAccept(this.user_setting);
+  var tag_accept = this.setting.getTagAccept();
   if (tag_accept.length == 0) {
     return true;
   }
@@ -80,7 +79,7 @@ Filter.prototype.checkTagAccept = function(problem) {
 }
 
 Filter.prototype.checkTagReject = function(problem) {
-  var tag_reject = setting.getTagReject(this.user_setting);
+  var tag_reject = this.setting.getTagReject();
   for (var k = 0; k < problem.tags.length; ++k) {
     var tag = problem.tags[k];
     if (tag_reject.indexOf(tag) !== -1) {
@@ -91,7 +90,7 @@ Filter.prototype.checkTagReject = function(problem) {
 }
 
 Filter.prototype.checkTagRejectIfSingle = function(problem) {
-  var tag_reject_if_single = setting.getTagRejectIfSingle(this.user_setting);
+  var tag_reject_if_single = this.setting.getTagRejectIfSingle();
   if (problem.tags.length == 1) {
     if (tag_reject_if_single.indexOf(problem.tags[0]) !== -1) {
       return false;
@@ -101,7 +100,7 @@ Filter.prototype.checkTagRejectIfSingle = function(problem) {
 }
 
 Filter.prototype.checkTagRejectIfNone = function(problem) {
-  if (setting.isTagRejectIfNone(this.user_setting)) {
+  if (this.setting.isTagRejectIfNone()) {
     if (problem.tags.length == 0) {
       return false;
     }
@@ -110,13 +109,13 @@ Filter.prototype.checkTagRejectIfNone = function(problem) {
 }
 
 Filter.prototype.checkIdRange = function(problem) {
-  var low = setting.getIdRangeLow(this.user_setting);
-  var high = setting.getIdRangeHigh(this.user_setting);
+  var low = this.setting.getIdRangeLow(this);
+  var high = this.setting.getIdRangeHigh(this);
   return low <= problem.num && problem.num <= high;
 }
 
 Filter.prototype.checkIdAccept = function(problem) {
-  var accepts = setting.getIdAccept(this.user_setting);
+  var accepts = this.setting.getIdAccept(this);
   if (accepts.length == 0) {
     return true;
   }
@@ -124,7 +123,7 @@ Filter.prototype.checkIdAccept = function(problem) {
 }
 
 Filter.prototype.checkRejectSub = function(problem) {
-  if (setting.isRejectSub(this.user_setting)) {
+  if (this.setting.isRejectSub(this)) {
     if (problem.alpha.length > 1) {
       return false;
     }
@@ -163,14 +162,14 @@ Filter.prototype.isProblemValid = function(problem, index) {
   return true;
 }
 
-exports.getFilteredProblemSets = function(user_setting, callback) {
+exports.getFilteredProblemSets = function(setting, callback) {
   var problem_crawler = require('./problem_crawler');
-  problem_crawler.getProblems(setting.isForceUpdate(user_setting), function(problems) {
-    new Filter(user_setting, function(filter) {
+  problem_crawler.getProblems(setting.isForceUpdate(), function(problems) {
+    new Filter(setting, function(filter) {
       var problem_sets = [];
       var selected_total = {};
-      var set_num = setting.getSetNum(user_setting);
-      var problem_num = setting.getProblemNum(user_setting);
+      var set_num = setting.getSetNum(setting);
+      var problem_num = setting.getProblemNum(setting);
       for (var i = 0; i < set_num; ++i) {
         var selected_sub = [];
         for (var j = 0; j < problem_num; ++j) {
@@ -206,8 +205,8 @@ exports.getFilteredProblemSets = function(user_setting, callback) {
   });
 };
 
-exports.outputFilteredProblemSets = function(user_setting, callback) {
-  exports.getFilteredProblemSets(user_setting, function(problem_sets) {
+exports.outputFilteredProblemSets = function(setting, callback) {
+  exports.getFilteredProblemSets(setting, function(problem_sets) {
     for (var i = 0; i < problem_sets.length; ++i) {
       console.log(chalk.yellow("Problem Suite " + i));
       for (var j = 0; j < problem_sets[i].length; ++j) {

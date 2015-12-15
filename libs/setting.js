@@ -17,7 +17,7 @@ const KEYS = [KEY_ACCEPTED, KEY_TEAM, KEY_CHASE,
               KEY_SET_NUM, KEY_PROBLEM_NUM, KEY_FORCE_UPDATE, KEY_SOLVED,
               KEY_TAG_ACCEPT, KEY_TAG_REJECT, KEY_TAG_REJECT_IF_SINGLE, KEY_TAG_REJECT_IF_NONE];
 
-exports.getDefaultSetting = function() {
+function getDefaultSetting() {
   var setting = {};
   setting[KEY_ACCEPTED]             = false;
   setting[KEY_TEAM]                 = [];
@@ -36,85 +36,85 @@ exports.getDefaultSetting = function() {
   return setting;
 }
 
-exports.getUserSetting = function(user_setting) {
-  var setting = exports.getDefaultSetting();
+exports.Setting = function() {
+  this.setting = getDefaultSetting();
+}
+
+exports.Setting.prototype.setUserSetting = function(user_setting) {
   for (var i = 0; i < KEYS.length; ++i) {
     var key = KEYS[i];
     if (key in user_setting) {
-      setting[key] = user_setting[key];
+      this.setting[key] = user_setting[key];
     }
   }
-  return setting;
 }
 
-exports.addUser = function(user_setting, username) {
-  if (user_setting[KEY_TEAM].indexOf(username) !== -1) {
-    user_setting[KEY_TEAM].push(username);
+exports.Setting.prototype.addUser = function(username) {
+  if (this.setting[KEY_TEAM].indexOf(username) !== -1) {
+    this.setting[KEY_TEAM].push(username);
   }
-  return user_setting;
 }
 
-exports.setForceUpdate = function(user_setting) {
-  user_setting[KEY_FORCE_UPDATE] = true;
-  return user_setting;
+exports.Setting.prototype.setForceUpdate = function() {
+  this.setting[KEY_FORCE_UPDATE] = true;
 }
 
-exports.isAllowAccepted = function(setting) {
-  return setting[KEY_ACCEPTED];
+exports.Setting.prototype.isAllowAccepted = function() {
+  return this.setting[KEY_ACCEPTED];
 }
 
-exports.getTeam = function(setting) {
-  return setting[KEY_TEAM];
+exports.Setting.prototype.getTeam = function() {
+  return this.setting[KEY_TEAM];
 }
 
-exports.getChase = function(setting) {
-  return setting[KEY_CHASE];
+exports.Setting.prototype.getChase = function() {
+  return this.setting[KEY_CHASE];
 }
 
-exports.getSetNum = function(setting) {
-  return setting[KEY_SET_NUM];
+exports.Setting.prototype.getSetNum = function() {
+  return this.setting[KEY_SET_NUM];
 }
 
-exports.getProblemNum = function(setting) {
-  return setting[KEY_PROBLEM_NUM];
+exports.Setting.prototype.getProblemNum = function() {
+  return this.setting[KEY_PROBLEM_NUM];
 }
 
-exports.isForceUpdate = function(setting) {
-  return setting[KEY_FORCE_UPDATE];
+exports.Setting.prototype.isForceUpdate = function() {
+  return this.setting[KEY_FORCE_UPDATE];
 }
 
-exports.getSolved = function(setting) {
-  return setting[KEY_SOLVED];
+exports.Setting.prototype.getSolved = function() {
+  return this.setting[KEY_SOLVED];
 }
 
-exports.getTagAccept = function(setting) {
-  return setting[KEY_TAG_ACCEPT];
+exports.Setting.prototype.getTagAccept = function() {
+  return this.setting[KEY_TAG_ACCEPT];
 }
 
-exports.getTagReject = function(setting) {
-  return setting[KEY_TAG_REJECT];
+exports.Setting.prototype.getTagReject = function() {
+  return this.setting[KEY_TAG_REJECT];
 }
 
-exports.getTagRejectIfSingle = function(setting) {
-  return setting[KEY_TAG_REJECT_IF_SINGLE];
+exports.Setting.prototype.getTagRejectIfSingle = function() {
+  return this.setting[KEY_TAG_REJECT_IF_SINGLE];
 }
 
-exports.isTagRejectIfNone = function(setting) {
-  return setting[KEY_TAG_REJECT_IF_NONE];
+exports.Setting.prototype.isTagRejectIfNone = function() {
+  return this.setting[KEY_TAG_REJECT_IF_NONE];
 }
 
-exports.getIdRangeLow = function(setting) {
-  return setting[KEY_ID_RANGE][0];
+exports.Setting.prototype.getIdRangeLow = function() {
+  return this.setting[KEY_ID_RANGE][0];
 }
 
-exports.getIdRangeHigh = function(setting) {
-  return setting[KEY_ID_RANGE][1];
+exports.Setting.prototype.getIdRangeHigh = function() {
+  return this.setting[KEY_ID_RANGE][1];
 }
 
-exports.getIdAccept = function(setting) {
-  return setting[KEY_ID_ACCEPT];
+exports.Setting.prototype.getIdAccept = function() {
+  return this.setting[KEY_ID_ACCEPT];
 }
 
-exports.isRejectSub = function(setting) {
-  return setting[KEY_REJECT_SUB];
+exports.Setting.prototype.isRejectSub = function() {
+  return this.setting[KEY_REJECT_SUB];
 }

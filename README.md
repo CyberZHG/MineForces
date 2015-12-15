@@ -40,9 +40,9 @@ Setting is stored in a [JSON](http://www.json.org/) file. If you do not provide 
 
 ```javascript
 {
-  "accepted": false,
   "team": [],
   "chase": [],
+  "accepted": false,
   "set_num": 10,
   "problem_num": 5,
   "force_update": false,
@@ -53,13 +53,10 @@ Setting is stored in a [JSON](http://www.json.org/) file. If you do not provide 
   "tag_reject_if_none": false,
   "id_range": [0, 100000],
   "id_accept": [],
-  "reject_sub": false
+  "reject_sub": false,
+  "show_team_status": false
 }
 ```
-
-### Accepted
-
-The default value is `false`. When `accepted` is set to `false`, only the unsolved problems will be returned. However, if it is set to `true`, __BOTH__ solved and unsolved problems would be returned.
 
 ### Team
 
@@ -110,6 +107,10 @@ and type:
 ```
 mineforces -s chase.json
 ```
+
+### Accepted
+
+The default value is `false`. When `accepted` is set to `false`, only the unsolved problems will be returned. However, if it is set to `true`, __BOTH__ solved and unsolved problems would be returned.
 
 ### Set Number
 
@@ -198,6 +199,11 @@ If the value is an empty array, then nothing happends. If you want to solve prob
 ### Reject Sub
 
 Some problems have multiple difficulties (`178C1`, `178C2` and `178C3`), these problems will not returned if `reject_sub` is set to `true`.
+
+
+### Show Team Status
+
+Show how many problems have been solved by the team in each category.
   
 ## License
 

@@ -2,7 +2,7 @@
 var program = require('commander');
 
 program
-  .version('0.0.9')
+  .version('0.0.10')
   .option('-s, --setting <path>', 'the path of the setting file')
   .option('-u, --user <user_name>', 'add your id to team value')
   .option('-f, --force', 'force updating the problem')
@@ -16,10 +16,10 @@ if (!fs.existsSync(saveDirectory)){
     fs.mkdirSync(saveDirectory);
 }
 
-var setting = require('./setting');
-
-function getUserSetting(callback) {
+function setUserSetting(callback) {
   var log = require('./log');
+  var setting = require('./setting');
+  setting = new setting.Setting();
   if (program.setting) {
     fs.readFile(program.setting, function(err, data) {
       if (err) {
@@ -32,22 +32,23 @@ function getUserSetting(callback) {
           log.fail('Invalid JSON file: ' + e);
         }
         if (user_setting) {
-          callback(setting.getUserSetting(user_setting));
+          setting.setUserSetting(user_setting);
+          callback(setting);
         }
       }
     });
   } else {
-    callback(setting.getDefaultSetting());
+    callback(setting);
   }
 }
 
-getUserSetting(function(user_setting) {
+setUserSetting(function(setting) {
   if (program.user) {
-    user_setting = setting.addUser(user_setting, program.user);
+    setting.addUser(program.user);
   }
   if (program.force) {
-    user_setting = setting.setForceUpdate(user_setting);
+    setting.setForceUpdate();
   }
   var filter = require('./filter');
-  filter.outputFilteredProblemSets(user_setting);
+  filter.outputFilteredProblemSets(setting);
 });

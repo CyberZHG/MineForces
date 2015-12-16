@@ -102,7 +102,8 @@ var SubmissionCrawler = function (setting, user_id) {
 
     crawler.pullSubmissionsAt = function (page_num, retry_num, callback) {
         if (crawler.finished || (crawler.total_page_num > 0 && page_num > crawler.total_page_num) || retry_num >= 3) {
-            if (retry_num < 3 && crawler.max_sub_num > crawler.user_info.max_sub_num) {
+            if (retry_num < 3) {
+                // Save to update the last modified date.
                 crawler.save();
             }
             if (callback) {
@@ -149,9 +150,24 @@ var SubmissionCrawler = function (setting, user_id) {
     };
 
     crawler.pullSubmissions = function (callback) {
-        crawler.pullSubmissionsAt(1, 0, callback);
+        fs.stat(crawler.getSaveFilePath(), function (err, stats) {
+            if (err) {
+                crawler.pullSubmissionsAt(1, 0, callback);
+            } else {
+                var lastModifiedTime = new Date(stats.mtime),
+                    currentTime = Date.now(),
+                    diff = currentTime - lastModifiedTime;
+                // The submission info is ten minutes ago.
+                if (diff > 1000 * 60 * 10) {
+                    crawler.pullSubmissionsAt(1, 0, callback);
+                } else {
+                    if (callback) {
+                        callback(crawler.user_info);
+                    }
+                }
+            }
+        });
     };
-
     return crawler;
 };
 

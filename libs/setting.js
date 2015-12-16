@@ -14,7 +14,7 @@ var KEY_TAG_REJECT = "tag_reject";
 var KEY_TAG_REJECT_IF_SINGLE = "tag_reject_if_single";
 var KEY_TAG_REJECT_IF_NONE = "tag_reject_if_none";
 var KEY_ID_RANGE = "id_range";
-var KEY_ID_ALPHA = "id_accept";
+var KEY_ID_ALPHA = "id_alpha";
 var KEY_REJECT_SUB = "reject_sub";
 var KEY_SILENT = "silent";
 
@@ -92,10 +92,13 @@ exports.Setting = function () {
     }
 
     function extendArrayValue(val, pos) {
-        if (val.length === 0 || !util.isArray(val[0])) {
-            return val;
+        if (util.isArray(val)) {
+            if (val.length === 0 || !util.isArray(val[0])) {
+                return val;
+            }
+            return val[pos];
         }
-        return val[pos];
+        return [val];
     }
 
     setting.isAllowAccepted = function (pos) {

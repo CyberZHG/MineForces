@@ -194,14 +194,14 @@ exports.getFilteredProblemSets = function (setting, callback) {
                 problem_sets.push(problem_set);
             });
             if (callback) {
-                callback(problem_sets, filter.team_accepts, filter.chase_accepts);
+                callback(problem_sets, filter.team_accepts, filter.chase_accepts, problems);
             }
         });
     });
 };
 
 exports.outputFilteredProblemSets = function (setting, callback) {
-    exports.getFilteredProblemSets(setting, function (problem_sets) {
+    exports.getFilteredProblemSets(setting, function (problem_sets, team_accepts, chase_accepts, problems) {
         problem_sets.forEach(function (problem_set, index) {
             console.log(chalk.yellow("Problem Suite " + index));
             problem_set.forEach(function (problem) {
@@ -211,7 +211,7 @@ exports.outputFilteredProblemSets = function (setting, callback) {
             console.log();
         });
         if (callback) {
-            callback(problem_sets);
+            callback(problem_sets, team_accepts, chase_accepts, problems);
         }
     });
 };

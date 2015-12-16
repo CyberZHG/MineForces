@@ -1,7 +1,7 @@
 {
   "name": "mine-forces",
   "description": "A helper application for practising on Codeforces",
-  "version": "0.0.10",
+  "version": "0.0.12",
   "author": "Zhao HG",
   "main": "./libs/main.js",
   "bin": {
@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "chalk": "1.1.1",
+    "cli-table": "0.3.1",
     "commander": "2.9.0",
     "prompt": "0.2.14",
     "request": "2.67.0"

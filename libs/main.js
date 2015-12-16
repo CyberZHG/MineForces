@@ -1,13 +1,13 @@
 #!/usr/bin/env node
-/*jslint node: true */
+/*jslint node: true*/
 'use strict';
 var program = require('commander');
 
 program
-    .version('0.0.10')
+    .version('0.0.12')
     .option('-s, --setting <path>', 'the path of the setting file')
     .option('-u, --user <user_name>', 'add your id to team value')
-    .option('-f, --force', 'force updating the problem')
+    .option('-f, --force', 'force updating the problem information')
     .parse(process.argv);
 
 var fs = require('fs');
@@ -48,7 +48,13 @@ function startFiltering() {
             setting.setForceUpdate();
         }
         var filter = require('./filter');
-        filter.outputFilteredProblemSets(setting);
+        filter.outputFilteredProblemSets(setting, function (problem_sets, team_accepts, chase_accepts, problems) {
+            /*jslint unparam:true*/
+            if (setting.isShowTeamStatus()) {
+                var status = require('./status');
+                status.showStatus(problems, team_accepts);
+            }
+        });
     });
 }
 

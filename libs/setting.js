@@ -16,12 +16,13 @@ var KEY_TAG_REJECT_IF_NONE = "tag_reject_if_none";
 var KEY_ID_RANGE = "id_range";
 var KEY_ID_ALPHA = "id_alpha";
 var KEY_REJECT_SUB = "reject_sub";
+var KEY_SHOW_TEAM_STATUS = "show_team_status";
 var KEY_SILENT = "silent";
 
 var KEYS = [KEY_TEAM, KEY_CHASE, KEY_ACCEPTED,
         KEY_SET_NUM, KEY_PROBLEM_NUM, KEY_FORCE_UPDATE, KEY_SOLVED,
         KEY_TAG_ACCEPT, KEY_TAG_REJECT, KEY_TAG_REJECT_IF_SINGLE, KEY_TAG_REJECT_IF_NONE,
-        KEY_ID_RANGE, KEY_ID_ALPHA, KEY_REJECT_SUB, KEY_SILENT];
+        KEY_ID_RANGE, KEY_ID_ALPHA, KEY_REJECT_SUB, KEY_SHOW_TEAM_STATUS, KEY_SILENT];
 
 function getDefaultSetting() {
     var setting = {};
@@ -39,6 +40,7 @@ function getDefaultSetting() {
     setting[KEY_ID_RANGE] = [0, 100000];
     setting[KEY_ID_ALPHA] = [];
     setting[KEY_REJECT_SUB] = false;
+    setting[KEY_SHOW_TEAM_STATUS] = false;
     setting[KEY_SILENT] = false;
     return setting;
 }
@@ -55,33 +57,20 @@ exports.Setting = function () {
     };
 
     setting.addUser = function (username) {
-        if (setting[KEY_TEAM].indexOf(username) !== -1) {
+        if (!util.isArray(setting[KEY_TEAM])) {
+            if (setting[KEY_TEAM] === '') {
+                setting[KEY_TEAM] = [username];
+            } else {
+                setting[KEY_TEAM] = [setting[KEY_TEAM], username];
+            }
+        }
+        if (setting[KEY_TEAM].indexOf(username) === -1) {
             setting[KEY_TEAM].push(username);
         }
     };
 
     setting.setForceUpdate = function () {
         setting[KEY_FORCE_UPDATE] = true;
-    };
-
-    setting.getTeam = function () {
-        return setting[KEY_TEAM];
-    };
-
-    setting.getChase = function () {
-        return setting[KEY_CHASE];
-    };
-
-    setting.getSetNum = function () {
-        return setting[KEY_SET_NUM];
-    };
-
-    setting.getProblemNum = function () {
-        return setting[KEY_PROBLEM_NUM];
-    };
-
-    setting.isForceUpdate = function () {
-        return setting[KEY_FORCE_UPDATE];
     };
 
     function extendValue(val, pos) {
@@ -100,6 +89,26 @@ exports.Setting = function () {
         }
         return [val];
     }
+
+    setting.getTeam = function () {
+        return extendArrayValue(setting[KEY_TEAM]);
+    };
+
+    setting.getChase = function () {
+        return extendArrayValue(setting[KEY_CHASE]);
+    };
+
+    setting.getSetNum = function () {
+        return setting[KEY_SET_NUM];
+    };
+
+    setting.getProblemNum = function () {
+        return setting[KEY_PROBLEM_NUM];
+    };
+
+    setting.isForceUpdate = function () {
+        return setting[KEY_FORCE_UPDATE];
+    };
 
     setting.isAllowAccepted = function (pos) {
         return extendValue(setting[KEY_ACCEPTED], pos);
@@ -139,6 +148,10 @@ exports.Setting = function () {
 
     setting.isRejectSub = function (pos) {
         return extendValue(setting[KEY_REJECT_SUB], pos);
+    };
+
+    setting.isShowTeamStatus = function () {
+        return setting[KEY_SHOW_TEAM_STATUS];
     };
 
     setting.isSilent = function () {

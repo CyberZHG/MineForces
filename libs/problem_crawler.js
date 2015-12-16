@@ -7,8 +7,9 @@ var util = require('./util');
 
 var PROBLEM_FILE = util.getSaveDirectory() + 'problems.json';
 
-var ProblemCrawler = function () {
+var ProblemCrawler = function (setting) {
     var crawler = {};
+    crawler.setting = setting;
     crawler.problems = {};
     crawler.total_page_num = 0;
 
@@ -109,7 +110,9 @@ var ProblemCrawler = function () {
                 crawler.total_page_num = page_num;
             }
         }
-        log.info('Problemset page count: ' + crawler.total_page_num);
+        if (!crawler.setting.isSilent()) {
+            log.info('Problemset page count: ' + crawler.total_page_num);
+        }
     };
 
     crawler.pullProblemsAt = function (page_num, retry_num, callback) {
@@ -120,10 +123,12 @@ var ProblemCrawler = function () {
             }
             return;
         }
-        if (retry_num === 0) {
-            log.info('Pulling problems on page ' + page_num);
-        } else {
-            log.info('Pulling problems on page ' + page_num + ' the ' + (retry_num + 1) + ' time');
+        if (!crawler.setting.isSilent()) {
+            if (retry_num === 0) {
+                log.info('Pulling problems on page ' + page_num);
+            } else {
+                log.info('Pulling problems on page ' + page_num + ' the ' + (retry_num + 1) + ' time');
+            }
         }
         request('http://codeforces.com/problemset/page/' + page_num, function (error, response, body) {
             if (error || response.statusCode !== 200) {
@@ -160,9 +165,9 @@ var ProblemCrawler = function () {
     return crawler;
 };
 
-exports.getProblems = function (force_update, callback) {
-    var crawler = new ProblemCrawler();
-    if (force_update) {
+exports.getProblems = function (setting, callback) {
+    var crawler = new ProblemCrawler(setting);
+    if (setting.isForceUpdate()) {
         crawler.pullProblems(callback);
     } else {
         fs.stat(PROBLEM_FILE, function (err, stats) {

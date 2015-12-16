@@ -16,11 +16,12 @@ var KEY_TAG_REJECT_IF_NONE = "tag_reject_if_none";
 var KEY_ID_RANGE = "id_range";
 var KEY_ID_ALPHA = "id_accept";
 var KEY_REJECT_SUB = "reject_sub";
+var KEY_SILENT = "silent";
 
 var KEYS = [KEY_TEAM, KEY_CHASE, KEY_ACCEPTED,
         KEY_SET_NUM, KEY_PROBLEM_NUM, KEY_FORCE_UPDATE, KEY_SOLVED,
         KEY_TAG_ACCEPT, KEY_TAG_REJECT, KEY_TAG_REJECT_IF_SINGLE, KEY_TAG_REJECT_IF_NONE,
-        KEY_ID_RANGE, KEY_ID_ALPHA, KEY_REJECT_SUB];
+        KEY_ID_RANGE, KEY_ID_ALPHA, KEY_REJECT_SUB, KEY_SILENT];
 
 function getDefaultSetting() {
     var setting = {};
@@ -38,6 +39,7 @@ function getDefaultSetting() {
     setting[KEY_ID_RANGE] = [0, 100000];
     setting[KEY_ID_ALPHA] = [];
     setting[KEY_REJECT_SUB] = false;
+    setting[KEY_SILENT] = false;
     return setting;
 }
 
@@ -134,6 +136,10 @@ exports.Setting = function () {
 
     setting.isRejectSub = function (pos) {
         return extendValue(setting[KEY_REJECT_SUB], pos);
+    };
+
+    setting.isSilent = function () {
+        return setting[KEY_SILENT];
     };
 
     return setting;

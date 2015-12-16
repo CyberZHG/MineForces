@@ -5,8 +5,9 @@ var request = require('request');
 var log = require('./log');
 var util = require('./util');
 
-var SubmissionCrawler = function (user_id) {
+var SubmissionCrawler = function (setting, user_id) {
     var crawler = {};
+    crawler.setting = setting;
     crawler.total_page_num = 0;
     crawler.max_sub_num = -1;
     crawler.user_info = {
@@ -37,7 +38,9 @@ var SubmissionCrawler = function (user_id) {
             }
             if (submission_id <= crawler.user_info.max_sub_num) {
                 crawler.finished = true;
-                log.info("Found saved submission: " + submission_id);
+                if (!crawler.setting.isSilent()) {
+                    log.info("Found saved submission: " + submission_id);
+                }
                 return;
             }
         }
@@ -88,7 +91,9 @@ var SubmissionCrawler = function (user_id) {
                 crawler.total_page_num = page_num;
             }
         }
-        log.info('Submissions page count: ' + crawler.total_page_num);
+        if (!crawler.setting.isSilent()) {
+            log.info('Submissions page count: ' + crawler.total_page_num);
+        }
     };
 
     crawler.pullSubmissionsAt = function (page_num, retry_num, callback) {
@@ -101,10 +106,12 @@ var SubmissionCrawler = function (user_id) {
             }
             return;
         }
-        if (retry_num === 0) {
-            log.info('Pulling ' + crawler.user_info.user_id + '\'s submissions on page ' + page_num);
-        } else {
-            log.info('Pulling ' + crawler.user_info.user_id + '\'s submissions on page ' + page_num + ' the ' + (retry_num + 1) + ' time');
+        if (!crawler.setting.isSilent()) {
+            if (retry_num === 0) {
+                log.info('Pulling ' + crawler.user_info.user_id + '\'s submissions on page ' + page_num);
+            } else {
+                log.info('Pulling ' + crawler.user_info.user_id + '\'s submissions on page ' + page_num + ' the ' + (retry_num + 1) + ' time');
+            }
         }
         request(crawler.getSubmissionsPageAt(page_num), function (error, response, body) {
             if (error || response.statusCode !== 200) {
@@ -144,8 +151,8 @@ var SubmissionCrawler = function (user_id) {
     return crawler;
 };
 
-exports.getUserInfo = function (user_id, callback) {
-    var crawler = new SubmissionCrawler(user_id);
+exports.getUserInfo = function (setting, user_id, callback) {
+    var crawler = new SubmissionCrawler(setting, user_id);
     crawler.load(function () {
         crawler.pullSubmissions(callback);
     });

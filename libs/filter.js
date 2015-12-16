@@ -20,7 +20,7 @@ var Filter = function (setting) {
         if (index >= team.length) {
             filter.initChase(0, callback);
         } else {
-            submission_crawler.getUserInfo(team[index], function (user_info) {
+            submission_crawler.getUserInfo(setting, team[index], function (user_info) {
                 Object.keys(user_info.accepts).forEach(function (key) {
                     filter.team_accepts[key] = true;
                 });
@@ -34,7 +34,7 @@ var Filter = function (setting) {
         if (index >= chase.length) {
             callback();
         } else {
-            submission_crawler.getUserInfo(chase[index], function (user_info) {
+            submission_crawler.getUserInfo(setting, chase[index], function (user_info) {
                 Object.keys(user_info.accepts).forEach(function (key) {
                     filter.chase_accepts[key] = true;
                 });
@@ -160,7 +160,7 @@ var Filter = function (setting) {
 
 exports.getFilteredProblemSets = function (setting, callback) {
     var problem_crawler = require('./problem_crawler');
-    problem_crawler.getProblems(setting.isForceUpdate(), function (problems) {
+    problem_crawler.getProblems(setting, function (problems) {
         var filter = new Filter(setting);
         filter.init(function () {
             var problem_sets = [],
@@ -194,7 +194,7 @@ exports.getFilteredProblemSets = function (setting, callback) {
                 problem_sets.push(problem_set);
             });
             if (callback) {
-                callback(problem_sets);
+                callback(problem_sets, filter.team_accepts, filter.chase_accepts);
             }
         });
     });

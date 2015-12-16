@@ -1,9 +1,6 @@
 /*jslint node: true */
 'use strict';
 exports.getUserHome = function () {
-    if (process.env.TRAVIS) {
-        return '/tmp';
-    }
     if (process.platform === 'win32') {
         return process.env.USERPROFILE;
     }

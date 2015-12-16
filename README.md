@@ -52,7 +52,7 @@ Setting is stored in a [JSON](http://www.json.org/) file. If you do not provide 
   "tag_reject_if_single": [],
   "tag_reject_if_none": false,
   "id_range": [0, 100000],
-  "id_accept": [],
+  "id_alpha": [],
   "reject_sub": false,
   "show_team_status": false
 }
@@ -186,13 +186,21 @@ If you do not want to solve old problems, you can set:
 
 then problems like `99A`, `99B`, `1C` will not returned.
 
-### ID Accept
+### ID Alpha
 
 If the value is an empty array, then nothing happends. If you want to solve problems like `100E`, `101E`, `102E`, you can set:
 
 ```javascript
 {
-  "id_accept": ["E"]
+  "id_alpha": ["E"]
+}
+```
+
+If you want to specify each problem, you can use:
+
+```javascript
+{
+  "id_accept": [["A"], ["B"], ["C"], ["D"], ["E"]]
 }
 ```
 
@@ -201,7 +209,7 @@ If the value is an empty array, then nothing happends. If you want to solve prob
 Some problems have multiple difficulties (`178C1`, `178C2` and `178C3`), these problems will not returned if `reject_sub` is set to `true`.
 
 
-### Show Team Status
+### ~~Show Team Status~~
 
 Show how many problems have been solved by the team in each category.
   

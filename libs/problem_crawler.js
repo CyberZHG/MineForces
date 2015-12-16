@@ -157,7 +157,7 @@ exports.getProblems = function(force_update, callback) {
         var lastModifiedTime = new Date(stats.mtime);
         var currentTime = Date.now();
         var diff = currentTime - lastModifiedTime;
-        // The problem info is one week age.
+        // The problem info is one week ago.
         if (diff > 1000 * 60 * 60 * 24 * 7) {
           crawler.pullProblems(callback);
         } else {

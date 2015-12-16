@@ -40,8 +40,8 @@ Filter.prototype.initChase = function(index, callback) {
   }
 }
 
-Filter.prototype.checkAccepted = function(problem) {
-  if (!this.setting.isAllowAccepted()) {
+Filter.prototype.checkAccepted = function(problem, index) {
+  if (!this.setting.isAllowAccepted(index)) {
     if (this.team_accepts[problem.id]) {
       return false;
     }
@@ -55,7 +55,7 @@ Filter.prototype.checkAccepted = function(problem) {
 }
 
 Filter.prototype.checkSolved = function(problem, index) {
-  var solved = this.setting.getSolved();
+  var solved = this.setting.getSolved(index);
   if (solved.length > 0) {
     if (problem.solved > solved[index]) {
       return false;
@@ -64,8 +64,8 @@ Filter.prototype.checkSolved = function(problem, index) {
   return true;
 }
 
-Filter.prototype.checkTagAccept = function(problem) {
-  var tag_accept = this.setting.getTagAccept();
+Filter.prototype.checkTagAccept = function(problem, index) {
+  var tag_accept = this.setting.getTagAccept(index);
   if (tag_accept.length == 0) {
     return true;
   }
@@ -78,8 +78,8 @@ Filter.prototype.checkTagAccept = function(problem) {
   return false;
 }
 
-Filter.prototype.checkTagReject = function(problem) {
-  var tag_reject = this.setting.getTagReject();
+Filter.prototype.checkTagReject = function(problem, index) {
+  var tag_reject = this.setting.getTagReject(index);
   for (var k = 0; k < problem.tags.length; ++k) {
     var tag = problem.tags[k];
     if (tag_reject.indexOf(tag) !== -1) {
@@ -89,8 +89,8 @@ Filter.prototype.checkTagReject = function(problem) {
   return true;
 }
 
-Filter.prototype.checkTagRejectIfSingle = function(problem) {
-  var tag_reject_if_single = this.setting.getTagRejectIfSingle();
+Filter.prototype.checkTagRejectIfSingle = function(problem, index) {
+  var tag_reject_if_single = this.setting.getTagRejectIfSingle(index);
   if (problem.tags.length == 1) {
     if (tag_reject_if_single.indexOf(problem.tags[0]) !== -1) {
       return false;
@@ -99,8 +99,8 @@ Filter.prototype.checkTagRejectIfSingle = function(problem) {
   return true;
 }
 
-Filter.prototype.checkTagRejectIfNone = function(problem) {
-  if (this.setting.isTagRejectIfNone()) {
+Filter.prototype.checkTagRejectIfNone = function(problem, index) {
+  if (this.setting.isTagRejectIfNone(index)) {
     if (problem.tags.length == 0) {
       return false;
     }
@@ -108,22 +108,22 @@ Filter.prototype.checkTagRejectIfNone = function(problem) {
   return true;
 }
 
-Filter.prototype.checkIdRange = function(problem) {
-  var low = this.setting.getIdRangeLow(this);
-  var high = this.setting.getIdRangeHigh(this);
+Filter.prototype.checkIdRange = function(problem, index) {
+  var low = this.setting.getIdRangeLow(index);
+  var high = this.setting.getIdRangeHigh(index);
   return low <= problem.num && problem.num <= high;
 }
 
-Filter.prototype.checkIdAccept = function(problem) {
-  var accepts = this.setting.getIdAccept(this);
-  if (accepts.length == 0) {
+Filter.prototype.checkIdAlpha = function(problem, index) {
+  var alpha = this.setting.getIdAlpha(index);
+  if (alpha.length == 0) {
     return true;
   }
-  return accepts.indexOf(problem.alpha[0]) >= 0;
+  return alpha.indexOf(problem.alpha[0]) >= 0;
 }
 
-Filter.prototype.checkRejectSub = function(problem) {
-  if (this.setting.isRejectSub(this)) {
+Filter.prototype.checkRejectSub = function(problem, index) {
+  if (this.setting.isRejectSub(index)) {
     if (problem.alpha.length > 1) {
       return false;
     }
@@ -132,31 +132,31 @@ Filter.prototype.checkRejectSub = function(problem) {
 }
 
 Filter.prototype.isProblemValid = function(problem, index) {
-  if (!this.checkAccepted(problem)) {
+  if (!this.checkAccepted(problem, index)) {
     return false;
   }
   if (!this.checkSolved(problem, index)) {
     return false;
   }
-  if (!this.checkTagAccept(problem)) {
+  if (!this.checkTagAccept(problem, index)) {
     return false;
   }
-  if (!this.checkTagReject(problem)) {
+  if (!this.checkTagReject(problem, index)) {
     return false;
   }
-  if (!this.checkTagRejectIfSingle(problem)) {
+  if (!this.checkTagRejectIfSingle(problem, index)) {
     return false;
   }
-  if (!this.checkTagRejectIfNone(problem)) {
+  if (!this.checkTagRejectIfNone(problem, index)) {
     return false;
   }
-  if (!this.checkIdRange(problem)) {
+  if (!this.checkIdRange(problem, index)) {
     return false;
   }
-  if (!this.checkIdAccept(problem)) {
+  if (!this.checkIdAlpha(problem, index)) {
     return false;
   }
-  if (!this.checkRejectSub(problem)) {
+  if (!this.checkRejectSub(problem, index)) {
     return false;
   }
   return true;

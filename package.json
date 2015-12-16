@@ -9,9 +9,17 @@
   },
   "dependencies": {
     "chalk": "1.1.1",
-    "prompt": "0.2.14",
     "commander": "2.9.0",
+    "prompt": "0.2.14",
     "request": "2.67.0"
+  },
+  "devDependencies": {
+    "jslint": "0.9.5",
+    "mocha": "2.3.4"
+  },
+  "scripts": {
+    "lint": "jslint ./libs/*.js",
+    "test": "mocha ./tests"
   },
   "repository": {
     "type": "git",

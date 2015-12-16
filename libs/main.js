@@ -14,8 +14,8 @@ var fs = require('fs');
 var util = require('./util');
 
 function setUserSetting(callback) {
-    var log = require('./log');
-    var setting = require('./setting');
+    var log = require('./log'),
+        setting = require('./setting');
     setting = new setting.Setting();
     if (program.setting) {
         fs.readFile(program.setting, function (err, data) {

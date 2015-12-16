@@ -21,12 +21,12 @@ exports.newArray = function (length, def) {
 };
 
 exports.newIncArray = function (length) {
-    var array = [];
-    var i = 0;
+    var array = [],
+        inc = 0;
     while (length > 0) {
-        array.push(i);
+        array.push(inc);
         length -= 1;
-        i += 1;
+        inc += 1;
     }
     return array;
 };

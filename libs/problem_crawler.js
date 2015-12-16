@@ -1,4 +1,4 @@
-/*jslint node: true */
+/*jslint node: true, regexp: true*/
 'use strict';
 var fs = require('fs');
 var request = require('request');
@@ -13,8 +13,8 @@ var ProblemCrawler = function () {
     crawler.total_page_num = 0;
 
     crawler.parseId = function (row, problem) {
-        var problem_id_regex = /<td\ class="id">.*?>.*?([0-9]+)([0-9A-Z]+).*?<\/a>/;
-        var result = problem_id_regex.exec(row);
+        var problem_id_regex = /<td\ class="id">.*?>.*?([0-9]+)([0-9A-Z]+).*?<\/a>/,
+            result = problem_id_regex.exec(row);
         if (result === null) {
             return false;
         }
@@ -25,8 +25,8 @@ var ProblemCrawler = function () {
     };
 
     crawler.parseTitle = function (row, problem) {
-        var title_regex = /<div\ style="float:left;">.*?<a.*?>(.*?)<\/a>/;
-        var result = title_regex.exec(row);
+        var title_regex = /<div\ style="float:left;">.*?<a.*?>(.*?)<\/a>/,
+            result = title_regex.exec(row);
         if (result === null) {
             return false;
         }
@@ -35,8 +35,8 @@ var ProblemCrawler = function () {
     };
 
     crawler.parseTags = function (row, problem) {
-        var tag_regex = /<a.*?class="notice".*?>(.*?)<\/a>/g;
-        var result;
+        var tag_regex = /<a.*?class="notice".*?>(.*?)<\/a>/g,
+            result;
         while (true) {
             result = tag_regex.exec(row);
             if (result === null) {
@@ -47,12 +47,12 @@ var ProblemCrawler = function () {
     };
 
     crawler.parseSolved = function (row, problem) {
-        var solved_regex = /user.png"\/>&nbsp;x(\d+)/;
-        var result = solved_regex.exec(row);
+        var solved_regex = /user.png"\/>&nbsp;x(\d+)/,
+            result = solved_regex.exec(row);
         if (result === null) {
             return false;
         }
-        problem.solved = parseInt(result[1]);
+        problem.solved = parseInt(result[1], 10);
         return true;
     };
 
@@ -96,14 +96,15 @@ var ProblemCrawler = function () {
     };
 
     crawler.parseTotalPageNum = function (body) {
-        var page_num_regex = /problemset\/page\/(\d+)/g;
-        var result, page_num;
+        var page_num_regex = /problemset\/page\/(\d+)/g,
+            result,
+            page_num;
         while (true) {
             result = page_num_regex.exec(body);
             if (result === null) {
                 break;
             }
-            page_num = parseInt(result[1]);
+            page_num = parseInt(result[1], 10);
             if (page_num > crawler.total_page_num) {
                 crawler.total_page_num = page_num;
             }
@@ -129,16 +130,15 @@ var ProblemCrawler = function () {
                 crawler.pullProblemsAt(page_num, retry_num + 1, callback);
             } else {
                 body = body.replace(/(\r\n|\n|\r)/gm, '');
-                var problem_table_regex = /<table\ class="problems">(.*)<\/table>/;
-                var rows_html_result = problem_table_regex.exec(body);
+                var problem_table_regex = /<table\ class="problems">(.*)<\/table>/,
+                    rows_html_result = problem_table_regex.exec(body),
+                    table_row_regex = /<tr\ .*?<\/tr>/g,
+                    result;
                 if (rows_html_result === null) {
                     crawler.pullProblemsAt(page_num, retry_num + 1, callback);
                 } else {
-                    var rows_html = rows_html_result[1];
-                    var table_row_regex = /<tr\ .*?<\/tr>/g;
-                    var result;
                     while (true) {
-                        result = table_row_regex.exec(rows_html);
+                        result = table_row_regex.exec(rows_html_result[1]);
                         if (result === null) {
                             break;
                         }
@@ -169,9 +169,9 @@ exports.getProblems = function (force_update, callback) {
             if (err) {
                 crawler.pullProblems(callback);
             } else {
-                var lastModifiedTime = new Date(stats.mtime);
-                var currentTime = Date.now();
-                var diff = currentTime - lastModifiedTime;
+                var lastModifiedTime = new Date(stats.mtime),
+                    currentTime = Date.now(),
+                    diff = currentTime - lastModifiedTime;
                 // The problem info is one week ago.
                 if (diff > 1000 * 60 * 60 * 24 * 7) {
                     crawler.pullProblems(callback);

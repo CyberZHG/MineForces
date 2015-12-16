@@ -102,8 +102,8 @@ var Filter = function (setting) {
     };
 
     filter.checkIdRange = function (problem, index) {
-        var low = filter.setting.getIdRangeLow(index);
-        var high = filter.setting.getIdRangeHigh(index);
+        var low = filter.setting.getIdRangeLow(index),
+            high = filter.setting.getIdRangeHigh(index);
         return low <= problem.num && problem.num <= high;
     };
 
@@ -163,13 +163,14 @@ exports.getFilteredProblemSets = function (setting, callback) {
     problem_crawler.getProblems(setting.isForceUpdate(), function (problems) {
         var filter = new Filter(setting);
         filter.init(function () {
-            var problem_sets = [];
-            var selected_total = {};
-            var set_num = setting.getSetNum(setting);
-            var problem_num = setting.getProblemNum(setting);
-            var problem_inc_array = util.newIncArray(problem_num);
+            var problem_sets = [],
+                selected_total = {},
+                set_num = setting.getSetNum(setting),
+                problem_num = setting.getProblemNum(setting),
+                problem_inc_array = util.newIncArray(problem_num);
             util.newIncArray(set_num).forEach(function () {
-                var selected_sub = util.newArray(problem_num, -1);
+                var selected_sub = util.newArray(problem_num, -1),
+                    problem_set = [];
                 problem_inc_array.forEach(function (index) {
                     var selected_problem = -1;
                     Object.keys(problems).forEach(function (key) {
@@ -184,7 +185,6 @@ exports.getFilteredProblemSets = function (setting, callback) {
                     });
                     selected_sub[index] = selected_problem;
                 });
-                var problem_set = [];
                 selected_sub.forEach(function (sub) {
                     if (sub !== -1) {
                         selected_total[sub] = true;

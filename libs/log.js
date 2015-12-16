@@ -1,13 +1,15 @@
-const chalk = require('chalk');
+/*jslint node: true */
+'use strict';
+var chalk = require('chalk');
 
-exports.info = function(msg) {
-  console.log(chalk.yellow("[INFO] " + msg));
+exports.info = function (msg) {
+    console.log(chalk.yellow("[INFO] " + msg));
 };
 
-exports.fail = function(msg) {
-  console.log(chalk.red("[FAIL] " + msg));
+exports.fail = function (msg) {
+    console.log(chalk.red("[FAIL] " + msg));
 };
 
-exports.success = function(msg) {
-  console.log(chalk.green("[SUCCESS] " + msg));
+exports.success = function (msg) {
+    console.log(chalk.green("[SUCCESS] " + msg));
 };

@@ -1,136 +1,140 @@
-const KEY_TEAM                 = "team";
-const KEY_CHASE                = "chase";
-const KEY_ACCEPTED             = "accepted";
-const KEY_SET_NUM              = "set_num";
-const KEY_PROBLEM_NUM          = "problem_num";
-const KEY_FORCE_UPDATE         = "force_update";
-const KEY_SOLVED               = "solved";
-const KEY_TAG_ACCEPT           = "tag_accept";
-const KEY_TAG_REJECT           = "tag_reject";
-const KEY_TAG_REJECT_IF_SINGLE = "tag_reject_if_single";
-const KEY_TAG_REJECT_IF_NONE   = "tag_reject_if_none";
-const KEY_ID_RANGE             = "id_range";
-const KEY_ID_ALPHA             = "id_accept";
-const KEY_REJECT_SUB           = "reject_sub";
+/*jslint node: true */
+'use strict';
+var util = require('./util');
 
-const KEYS = [KEY_TEAM, KEY_CHASE, KEY_ACCEPTED,
-              KEY_SET_NUM, KEY_PROBLEM_NUM, KEY_FORCE_UPDATE, KEY_SOLVED,
-              KEY_TAG_ACCEPT, KEY_TAG_REJECT, KEY_TAG_REJECT_IF_SINGLE, KEY_TAG_REJECT_IF_NONE,
-              KEY_ID_RANGE, KEY_ID_ALPHA, KEY_REJECT_SUB];
+var KEY_TEAM = "team";
+var KEY_CHASE = "chase";
+var KEY_ACCEPTED = "accepted";
+var KEY_SET_NUM = "set_num";
+var KEY_PROBLEM_NUM = "problem_num";
+var KEY_FORCE_UPDATE = "force_update";
+var KEY_SOLVED = "solved";
+var KEY_TAG_ACCEPT = "tag_accept";
+var KEY_TAG_REJECT = "tag_reject";
+var KEY_TAG_REJECT_IF_SINGLE = "tag_reject_if_single";
+var KEY_TAG_REJECT_IF_NONE = "tag_reject_if_none";
+var KEY_ID_RANGE = "id_range";
+var KEY_ID_ALPHA = "id_accept";
+var KEY_REJECT_SUB = "reject_sub";
+
+var KEYS = [KEY_TEAM, KEY_CHASE, KEY_ACCEPTED,
+        KEY_SET_NUM, KEY_PROBLEM_NUM, KEY_FORCE_UPDATE, KEY_SOLVED,
+        KEY_TAG_ACCEPT, KEY_TAG_REJECT, KEY_TAG_REJECT_IF_SINGLE, KEY_TAG_REJECT_IF_NONE,
+        KEY_ID_RANGE, KEY_ID_ALPHA, KEY_REJECT_SUB];
 
 function getDefaultSetting() {
-  var setting = {};
-  setting[KEY_TEAM]                 = [];
-  setting[KEY_CHASE]                = [];
-  setting[KEY_ACCEPTED]             = false;
-  setting[KEY_SET_NUM]              = 10;
-  setting[KEY_PROBLEM_NUM]          = 5;
-  setting[KEY_FORCE_UPDATE]         = false;
-  setting[KEY_SOLVED]               = [5000, 2000, 1000, 500, 100];
-  setting[KEY_TAG_ACCEPT]           = [];
-  setting[KEY_TAG_REJECT]           = [];
-  setting[KEY_TAG_REJECT_IF_SINGLE] = [];
-  setting[KEY_TAG_REJECT_IF_NONE]   = false;
-  setting[KEY_ID_RANGE]             = [0, 100000];
-  setting[KEY_ID_ALPHA]            = [];
-  setting[KEY_REJECT_SUB]           = false;
-  return setting;
+    var setting = {};
+    setting[KEY_TEAM] = [];
+    setting[KEY_CHASE] = [];
+    setting[KEY_ACCEPTED] = false;
+    setting[KEY_SET_NUM] = 10;
+    setting[KEY_PROBLEM_NUM] = 5;
+    setting[KEY_FORCE_UPDATE] = false;
+    setting[KEY_SOLVED] = [5000, 2000, 1000, 500, 100];
+    setting[KEY_TAG_ACCEPT] = [];
+    setting[KEY_TAG_REJECT] = [];
+    setting[KEY_TAG_REJECT_IF_SINGLE] = [];
+    setting[KEY_TAG_REJECT_IF_NONE] = false;
+    setting[KEY_ID_RANGE] = [0, 100000];
+    setting[KEY_ID_ALPHA] = [];
+    setting[KEY_REJECT_SUB] = false;
+    return setting;
 }
 
-exports.Setting = function() {
-  this.setting = getDefaultSetting();
-}
+exports.Setting = function () {
+    var setting = getDefaultSetting();
 
-exports.Setting.prototype.setUserSetting = function(user_setting) {
-  for (var i = 0; i < KEYS.length; ++i) {
-    var key = KEYS[i];
-    if (key in user_setting) {
-      this.setting[key] = user_setting[key];
+    setting.setUserSetting = function (user_setting) {
+        KEYS.forEach(function (key) {
+            if (user_setting.hasOwnProperty(key)) {
+                setting[key] = user_setting[key];
+            }
+        });
+    };
+
+    setting.addUser = function (username) {
+        if (setting[KEY_TEAM].indexOf(username) !== -1) {
+            setting[KEY_TEAM].push(username);
+        }
+    };
+
+    setting.setForceUpdate = function () {
+        setting[KEY_FORCE_UPDATE] = true;
+    };
+
+    setting.getTeam = function () {
+        return setting[KEY_TEAM];
+    };
+
+    setting.getChase = function () {
+        return setting[KEY_CHASE];
+    };
+
+    setting.getSetNum = function () {
+        return setting[KEY_SET_NUM];
+    };
+
+    setting.getProblemNum = function () {
+        return setting[KEY_PROBLEM_NUM];
+    };
+
+    setting.isForceUpdate = function () {
+        return setting[KEY_FORCE_UPDATE];
+    };
+
+    function extendValue(val, pos) {
+        if (util.isArray(val)) {
+            return val[pos];
+        }
+        return val;
     }
-  }
-}
 
-exports.Setting.prototype.addUser = function(username) {
-  if (this.setting[KEY_TEAM].indexOf(username) !== -1) {
-    this.setting[KEY_TEAM].push(username);
-  }
-}
+    function extendArrayValue(val, pos) {
+        if (val.length === 0 || !util.isArray(val[0])) {
+            return val;
+        }
+        return val[pos];
+    }
 
-exports.Setting.prototype.setForceUpdate = function() {
-  this.setting[KEY_FORCE_UPDATE] = true;
-}
+    setting.isAllowAccepted = function (pos) {
+        return extendValue(setting[KEY_ACCEPTED], pos);
+    };
 
-exports.Setting.prototype.getTeam = function() {
-  return this.setting[KEY_TEAM];
-}
+    setting.getSolved = function (pos) {
+        return extendValue(setting[KEY_SOLVED], pos);
+    };
 
-exports.Setting.prototype.getChase = function() {
-  return this.setting[KEY_CHASE];
-}
+    setting.getTagAccept = function (pos) {
+        return extendArrayValue(setting[KEY_TAG_ACCEPT], pos);
+    };
 
-exports.Setting.prototype.getSetNum = function() {
-  return this.setting[KEY_SET_NUM];
-}
+    setting.getTagReject = function (pos) {
+        return extendArrayValue(setting[KEY_TAG_REJECT], pos);
+    };
 
-exports.Setting.prototype.getProblemNum = function() {
-  return this.setting[KEY_PROBLEM_NUM];
-}
+    setting.getTagRejectIfSingle = function (pos) {
+        return extendArrayValue(setting[KEY_TAG_REJECT_IF_SINGLE], pos);
+    };
 
-exports.Setting.prototype.isForceUpdate = function() {
-  return this.setting[KEY_FORCE_UPDATE];
-}
+    setting.isTagRejectIfNone = function (pos) {
+        return extendValue(setting[KEY_TAG_REJECT_IF_NONE], pos);
+    };
 
-function isArray(obj) {
-  return Object.prototype.toString.call(obj) === '[object Array]';
-}
+    setting.getIdRangeLow = function (pos) {
+        return extendArrayValue(setting[KEY_ID_RANGE], pos)[0];
+    };
 
-function extendValue(val, pos) {
-  return isArray(val) ? val[pos] : val;
-}
+    setting.getIdRangeHigh = function (pos) {
+        return extendArrayValue(setting[KEY_ID_RANGE], pos)[1];
+    };
 
-function extendArrayValue(val, pos) {
-  if (val.length == 0) {
-    return val;
-  }
-  return isArray(val[0]) ? val[pos] : val;
-}
+    setting.getIdAlpha = function (pos) {
+        return extendArrayValue(setting[KEY_ID_ALPHA], pos);
+    };
 
-exports.Setting.prototype.isAllowAccepted = function(pos) {
-  return extendValue(this.setting[KEY_ACCEPTED], pos);
-}
+    setting.isRejectSub = function (pos) {
+        return extendValue(setting[KEY_REJECT_SUB], pos);
+    };
 
-exports.Setting.prototype.getSolved = function(pos) {
-  return extendValue(this.setting[KEY_SOLVED], pos);
-}
-
-exports.Setting.prototype.getTagAccept = function(pos) {
-  return extendArrayValue(this.setting[KEY_TAG_ACCEPT], pos);
-}
-
-exports.Setting.prototype.getTagReject = function(pos) {
-  return extendArrayValue(this.setting[KEY_TAG_REJECT], pos);
-}
-
-exports.Setting.prototype.getTagRejectIfSingle = function(pos) {
-  return extendArrayValue(this.setting[KEY_TAG_REJECT_IF_SINGLE], pos);
-}
-
-exports.Setting.prototype.isTagRejectIfNone = function(pos) {
-  return extendValue(this.setting[KEY_TAG_REJECT_IF_NONE], pos);
-}
-
-exports.Setting.prototype.getIdRangeLow = function(pos) {
-  return extendArrayValue(this.setting[KEY_ID_RANGE], pos)[0];
-}
-
-exports.Setting.prototype.getIdRangeHigh = function(pos) {
-  return extendArrayValue(this.setting[KEY_ID_RANGE], pos)[1];
-}
-
-exports.Setting.prototype.getIdAlpha = function(pos) {
-  return extendArrayValue(this.setting[KEY_ID_ALPHA], pos);
-}
-
-exports.Setting.prototype.isRejectSub = function(pos) {
-  return extendValue(this.setting[KEY_REJECT_SUB], pos);
-}
+    return setting;
+};

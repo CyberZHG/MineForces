@@ -79,8 +79,10 @@ var ProblemCrawler = function (setting) {
 
     crawler.save = function () {
         fs.writeFile(PROBLEM_FILE, JSON.stringify(crawler.problems), function (err) {
-            if (!crawler.setting.isSilent()) {
-                console.log(err);
+            if (err) {
+                if (!crawler.setting.isSilent()) {
+                    console.log(err);
+                }
             }
         });
     };

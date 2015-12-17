@@ -115,6 +115,11 @@ var Filter = function (setting) {
         return alpha.indexOf(problem.alpha[0]) >= 0;
     };
 
+    filter.checkIdReject = function (problem, index) {
+        var rejects = filter.setting.getIdReject(index);
+        return rejects.indexOf(problem.id) === -1;
+    };
+
     filter.checkRejectSub = function (problem, index) {
         if (filter.setting.isRejectSub(index)) {
             if (problem.alpha.length > 1) {

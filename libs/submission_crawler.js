@@ -55,8 +55,10 @@ var SubmissionCrawler = function (setting, user_id) {
     crawler.save = function () {
         crawler.user_info.max_sub_num = crawler.max_sub_num;
         fs.writeFile(crawler.getSaveFilePath(), JSON.stringify(crawler.user_info), function (err) {
-            if (!crawler.setting.isSilent()) {
-                console.log(err);
+            if (err) {
+                if (!crawler.setting.isSilent()) {
+                    console.log(err);
+                }
             }
         });
     };

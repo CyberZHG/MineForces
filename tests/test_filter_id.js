@@ -138,6 +138,50 @@ describe('Filter', function () {
         });
     });
 
+    describe('#filter_id_reject', function () {
+        it('Reject specific id', function (done) {
+            this.timeout(test_time_out);
+            var user_setting = new setting.Setting();
+            user_setting.setUserSetting({
+                'accept': true,
+                'set_num': 50,
+                'id_reject': '1A',
+                'silent': true
+            });
+            filter.getFilteredProblemSets(user_setting, function (problem_sets) {
+                assert.ok(problem_sets.length > 0);
+                assert.ok(problem_sets.every(function (problem_set) {
+                    assert.ok(problem_set.length > 0);
+                    return problem_set.every(function (problem) {
+                        return problem.id !== '1A';
+                    });
+                }));
+                done();
+            });
+        });
+
+        it('Reject specific id', function (done) {
+            this.timeout(test_time_out);
+            var user_setting = new setting.Setting();
+            user_setting.setUserSetting({
+                'accept': true,
+                'set_num': 50,
+                'id_reject': ['1A'],
+                'silent': true
+            });
+            filter.getFilteredProblemSets(user_setting, function (problem_sets) {
+                assert.ok(problem_sets.length > 0);
+                assert.ok(problem_sets.every(function (problem_set) {
+                    assert.ok(problem_set.length > 0);
+                    return problem_set.every(function (problem) {
+                        return problem.id !== '1A';
+                    });
+                }));
+                done();
+            });
+        });
+    });
+
     describe('#filter_reject_sub', function () {
         it('Given const reject sub', function (done) {
             this.timeout(test_time_out);

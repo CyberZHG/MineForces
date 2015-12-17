@@ -55,6 +55,7 @@ Setting is stored in a [JSON](http://www.json.org/) file. If you do not provide 
   "tag_reject_if_none": false,              // Single
   "id_range": [0, 100000],                  // Array
   "id_alpha": [],                           // Array
+  "id_reject": [],                          // Array
   "reject_sub": false,                      // Single
   "show_team_status": false
 }
@@ -212,6 +213,16 @@ If you want to specify each problem, you can use:
 ```javascript
 {
   "id_accept": [["A"], ["B"], ["C"], ["D"], ["E"]]
+}
+```
+
+### ID Reject
+
+The specific problem ids will not returned:
+
+```
+{
+  "id_reject": ["123B", "456C"]
 }
 ```
 

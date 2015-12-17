@@ -4,7 +4,7 @@
 var program = require('commander');
 
 program
-    .version('0.0.13')
+    .version('0.0.14')
     .option('-s, --setting <path>', 'the path of the setting file')
     .option('-u, --user <user_name>', 'add your id to team value')
     .option('-f, --force', 'force updating the problem information')

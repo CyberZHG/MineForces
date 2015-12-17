@@ -90,13 +90,18 @@ var ProblemCrawler = function (setting) {
     crawler.load = function (callback) {
         fs.readFile(PROBLEM_FILE, function (err, data) {
             if (err) {
-                if (callback) {
-                    callback([]);
-                }
+                crawler.pullProblems(callback);
             } else {
-                crawler.problems = JSON.parse(data);
-                if (callback) {
-                    callback(crawler.problems);
+                try {
+                    crawler.problems = JSON.parse(data);
+                    if (callback) {
+                        callback(crawler.problems);
+                    }
+                } catch (e) {
+                    if (!crawler.setting.isSilent()) {
+                        log.fail('Error while reading problems: ' + e);
+                    }
+                    crawler.pullProblems(callback);
                 }
             }
         });

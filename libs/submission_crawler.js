@@ -74,7 +74,9 @@ var SubmissionCrawler = function (setting, user_id) {
                     crawler.user_info = JSON.parse(data);
                     crawler.max_sub_num = crawler.user_info.max_sub_num;
                 } catch (e) {
-                    log.fail(e);
+                    if (!crawler.setting.isSilent()) {
+                        log.fail('Error while reading submissions: ' + e);
+                    }
                 }
                 if (callback) {
                     callback();
@@ -160,7 +162,9 @@ var SubmissionCrawler = function (setting, user_id) {
                     currentTime = Date.now(),
                     diff = currentTime - lastModifiedTime;
                 // The submission info is ten minutes ago.
-                if (diff > 1000 * 60 * 10 || crawler.setting.isForceUpdate()) {
+                if (diff > 1000 * 60 * 10
+                        || Object.keys(crawler.user_info.accepts).length === 0
+                        || crawler.setting.isForceUpdate()) {
                     crawler.pullSubmissionsAt(1, 0, callback);
                 } else {
                     if (callback) {

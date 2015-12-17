@@ -4,7 +4,7 @@ Mine Forces
 [![travis-ci](https://travis-ci.org/CyberZHG/MineForces.svg)](https://travis-ci.org/CyberZHG/MineForces)
 [![david-dm](https://david-dm.org/CyberZHG/MineForces.svg)](https://david-dm.org/CyberZHG/MineForces)
 [![badge.fury](https://badge.fury.io/js/mine-forces.svg)](https://badge.fury.io/js/mine-forces)
-![img.shields](https://img.shields.io/npm/dm/mine-forces.svg)
+![img.shields](https://img.shields.io/npm/dt/mine-forces.svg)
 
 ## Introduction
 

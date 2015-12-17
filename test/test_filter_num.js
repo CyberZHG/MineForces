@@ -2,8 +2,8 @@
 /*global describe: false, it: false */
 'use strict';
 var assert = require('assert');
-var setting = require('../libs/setting');
-var filter = require('../libs/filter');
+var setting = require('../lib/setting');
+var filter = require('../lib/filter');
 
 var test_time_out = 1000 * 60 * 10;
 

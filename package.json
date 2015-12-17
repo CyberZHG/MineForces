@@ -3,9 +3,9 @@
   "description": "A helper application for practising on Codeforces",
   "version": "0.0.14",
   "author": "Zhao HG",
-  "main": "./libs/main.js",
+  "main": "./lib/main.js",
   "bin": {
-    "mineforces": "./libs/main.js"
+    "mineforces": "./lib/main.js"
   },
   "dependencies": {
     "chalk": "1.1.1",
@@ -20,8 +20,8 @@
     "mocha": "2.3.4"
   },
   "scripts": {
-    "lint": "jslint ./libs/*.js && jslint ./tests/*.js",
-    "test": "npm run lint && mocha ./tests"
+    "lint": "jslint ./lib/*.js && jslint ./test/*.js",
+    "test": "npm run lint && mocha ./test"
   },
   "repository": {
     "type": "git",

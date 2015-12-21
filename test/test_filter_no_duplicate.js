@@ -17,14 +17,13 @@ describe('Filter', function () {
             user_setting.setUserSetting({
                 'accepted': true,
                 'solved': 100000,
-                'set_num': 3,
-                'problem_num': 1000,
+                'set_num': 1000,
+                'problem_num': 3,
                 'silent': true
             });
             filter.getFilteredProblemSets(user_setting, function (problem_sets) {
                 assert.ok(problem_sets.length > 0);
                 problem_sets.forEach(function (problem_set) {
-                    assert.ok(problem_set.length > 0);
                     num += problem_set.length;
                     problem_set.forEach(function (problem) {
                         ids[problem.id] = true;

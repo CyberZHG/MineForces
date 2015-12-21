@@ -20,8 +20,9 @@
     "mocha": "2.3.4"
   },
   "scripts": {
+    "start": "node . -t",
     "lint": "jslint ./lib/*.js && jslint ./test/*.js",
-    "test": "npm run lint && mocha ./test"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",

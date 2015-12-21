@@ -3,3 +3,7 @@ node_js:
   - "4.2.3"
   - "5.2.0"
   - "iojs"
+script: 
+  - $(which npm) run lint
+  - $(which npm) start
+  - $(which npm) test

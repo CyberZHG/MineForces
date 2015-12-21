@@ -59,7 +59,7 @@ Setting is stored in a [JSON](http://www.json.org/) file. If you do not provide 
   "id_reject": [],                          // Array
   "reject_sub": false,                      // Single
   "ascii_only": true,
-  "show_team_status": ["total", "alpha", "tag"],
+  "show_team_status": ["total"],
   "show_problem_detail": ["title", "solved", "tag"],
   "output_path": ""
 }
@@ -240,7 +240,7 @@ Some problems on Codeforces are not written in English, the problem with a title
 
 ### Show Team Status
 
-Show how many problems have been solved by the team in each category.
+Show how many problems have been solved by the team in each category. The value could be `total`, `alpha` and `tag`.
   
 ## License
 

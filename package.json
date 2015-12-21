@@ -1,7 +1,7 @@
 {
   "name": "mine-forces",
   "description": "A helper application for practising on Codeforces",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "author": "Zhao HG",
   "main": "./lib/main.js",
   "bin": {
@@ -20,7 +20,7 @@
     "mocha": "2.3.4"
   },
   "scripts": {
-    "start": "node . -t",
+    "start": "node ./lib/init.js",
     "lint": "jslint ./lib/*.js && jslint ./test/*.js",
     "test": "mocha"
   },

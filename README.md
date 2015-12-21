@@ -34,6 +34,7 @@ Options:
   -s, --setting <path>    the path of the setting file
   -u, --user <user_name>  add your id to team value
   -f, --force             force updating the problem information
+  -o, --output <path>     save filter result to output path
 ```
 
 ### Default Setting
@@ -57,7 +58,9 @@ Setting is stored in a [JSON](http://www.json.org/) file. If you do not provide 
   "id_alpha": [],                           // Array
   "id_reject": [],                          // Array
   "reject_sub": false,                      // Single
-  "show_team_status": false
+  "show_team_status": ["total", "alpha", "tag"],
+  "show_problem_detail": ["title", "solved", "tag"],
+  "output_path": ""
 }
 ```
 

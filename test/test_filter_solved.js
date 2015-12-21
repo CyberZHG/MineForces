@@ -50,5 +50,23 @@ describe('Filter', function () {
                 done();
             });
         });
+
+        it('Empty array', function (done) {
+            this.timeout(test_time_out);
+            var user_setting = new setting.Setting();
+            user_setting.setUserSetting({
+                'team': ['cyberzhg'],
+                'solved': [],
+                'silent': true
+            });
+            filter.getFilteredProblemSets(user_setting, function (problem_sets) {
+                assert.ok(problem_sets.length > 0);
+                assert.ok(problem_sets.every(function (problem_set) {
+                    assert.ok(problem_set.length > 0);
+                    return true;
+                }));
+                done();
+            });
+        });
     });
 });

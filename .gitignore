@@ -28,6 +28,7 @@ node_modules
 # Zip file
 *.zip
 
-# Cookies
+# Config files
+mine.json
 cookies.json
 problems.json

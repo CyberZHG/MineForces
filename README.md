@@ -188,7 +188,7 @@ The problem which has only one tag and the tag appeared in the `tag_reject_if_si
 
 ### Tag Reject If None
 
-The problem which has no tag yet will not be returned.
+The problem with no tag will not be returned.
 
 ### ID Range
 
@@ -224,11 +224,16 @@ If you want to specify each problem, you can use:
 
 The specific problem ids will not returned:
 
-```
+```javascript
 {
   "id_reject": ["123B", "456C"]
 }
 ```
+
+Suggestion:
+
+April Fools' Round: 656A - 656G, 409A - 409I, 290A - 290F, 171A - 171E
+Picat: 530A - 530I
 
 ### Reject Sub
 

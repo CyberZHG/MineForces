@@ -61,6 +61,7 @@ Setting is stored in a [JSON](http://www.json.org/) file. If you do not provide 
   "ascii_only": true,
   "show_team_status": ["total"],
   "show_problem_detail": ["title", "solved", "tag"],
+  "force_new_tag": false,
   "output_path": ""
 }
 ```
@@ -246,6 +247,10 @@ Some problems on Codeforces are not written in English, the problem with a title
 ### Show Team Status
 
 Show how many problems have been solved by the team in each category. The value could be `total`, `alpha` and `tag`.
+
+### Force New Tag
+
+Each problem in a problem suite should have at least one tag that has not appeared before.
   
 ## License
 

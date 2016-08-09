@@ -62,6 +62,7 @@ Setting is stored in a [JSON](http://www.json.org/) file. If you do not provide 
   "show_team_status": ["total"],
   "show_problem_detail": ["title", "solved", "tag"],
   "force_new_tag": false,
+  "random_order": false,
   "output_path": ""
 }
 ```
@@ -251,7 +252,11 @@ Show how many problems have been solved by the team in each category. The value 
 ### Force New Tag
 
 Each problem in a problem suite should have at least one tag that has not appeared before.
-  
+
+### Random Order
+
+The problems in a problem suite will show in random order.
+
 ## License
 
 GPL-2.0

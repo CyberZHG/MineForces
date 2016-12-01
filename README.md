@@ -60,7 +60,7 @@ Setting is stored in a [JSON](http://www.json.org/) file. If you do not provide 
   "reject_sub": false,                      // Single
   "ascii_only": true,
   "show_team_status": ["total"],
-  "show_problem_detail": ["title", "solved", "tag"],
+  "show_problem_detail": ["title", "solved", "tag", "url"],
   "force_new_tag": false,
   "random_order": false,
   "output_path": ""

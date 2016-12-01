@@ -1,7 +1,7 @@
 {
   "name": "mine-forces",
   "description": "A helper cli tool for practising on Codeforces",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "author": "Zhao HG",
   "main": "./lib/main.js",
   "bin": {
@@ -12,7 +12,8 @@
     "cli-table": "0.3.1",
     "commander": "2.9.0",
     "prompt": "1.0.0",
-    "request": "2.79.0"
+    "request": "2.79.0",
+    "mkdirp": "0.5.1"
   },
   "devDependencies": {
     "assert": "1.4.1",

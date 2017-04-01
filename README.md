@@ -232,10 +232,25 @@ The specific problem ids will not returned:
 }
 ```
 
-Suggestion:
+Suggestions:
 
-April Fools' Round: 784A - 784G, 656A - 656G, 409A - 409I, 290A - 290F, 171A - 171E
-Picat: 530A - 530I
+* April Fools' Rounds: 
+  * 2012: 784 A-G
+  * 2013: 656 A-G
+  * 2014: 409 A-I
+  * 2016: 290 A-F
+  * 2017: 171 A-E
+* Superise/Unknown Language Rounds: 
+  * Tcl: 64 A-I
+  * Io: 72 A-I
+  * Pike: 100 A-J
+  * Refunge: 130 A-J
+  * COBOL: 153 A-E
+  * Factor: 162 A-J
+  * Roco: 188 A-H
+  * FALSE: 470 A-H
+  * Picat: 530A - 530I
+  * Kotlin: 683 A-J
 
 ### Reject Sub
 

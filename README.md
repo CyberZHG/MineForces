@@ -249,7 +249,7 @@ Suggestions:
   * Factor: 162 A-J
   * Roco: 188 A-H
   * FALSE: 470 A-H
-  * Picat: 530A - 530I
+  * Picat: 530A-I
   * Kotlin: 683 A-J
 
 ### Reject Sub

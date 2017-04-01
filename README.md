@@ -235,11 +235,11 @@ The specific problem ids will not returned:
 Suggestions:
 
 * April Fools' Rounds: 
-  * 2012: 784 A-G
-  * 2013: 656 A-G
+  * 2012: 171 A-E
+  * 2013: 290 A-F
   * 2014: 409 A-I
-  * 2016: 290 A-F
-  * 2017: 171 A-E
+  * 2016: 656 A-G
+  * 2017: 784 A-G
 * Superise/Unknown Language Rounds: 
   * Tcl: 64 A-I
   * Io: 72 A-I

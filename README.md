@@ -235,7 +235,7 @@ The specific problem ids will not returned:
 Suggestions:
 
 * April Fools' Rounds: 
-  * 2012: 171 A-E
+  * 2012: 171 A-G
   * 2013: 290 A-F
   * 2014: 409 A-I
   * 2016: 656 A-G
@@ -249,7 +249,7 @@ Suggestions:
   * Factor: 162 A-J
   * Roco: 188 A-H
   * FALSE: 470 A-H
-  * Picat: 530A-I
+  * Picat: 530 A-I
   * Kotlin: 683 A-J
 
 ### Reject Sub
